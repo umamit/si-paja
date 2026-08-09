@@ -54,7 +54,7 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
   return (
     <div className="space-y-4 max-w-lg bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
       <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-slate-50/50 transition-colors relative">
-        <input type="file" accept=".gpx" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" disabled={parsing} />
+        <input type="file" accept=".gpx,.kml" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" disabled={parsing} />
         {parsedData ? (
           <>
             <FileCheck className="h-10 w-10 text-emerald-500 mb-2" />
@@ -64,7 +64,7 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
         ) : (
           <>
             <FileUp className="h-10 w-10 text-slate-400 mb-2" />
-            <p className="text-sm font-semibold text-slate-700">Pilih file GPS (.gpx)</p>
+            <p className="text-sm font-semibold text-slate-700">Pilih file GPS / Google Earth (.gpx, .kml)</p>
             <p className="text-xs text-slate-400 mt-1">Klik untuk cari atau seret file ke sini</p>
           </>
         )}
