@@ -13,10 +13,12 @@ export function CostEstimator({ segment }: CostEstimatorProps) {
   const depth = Number(segment.depth_cm) / 100;
   const volume = length * width * depth;
 
+  // Disesuaikan dengan SHS (Standar Harga Satuan) Kabupaten Pulau Taliabu
+  // Indeks kemahalan tinggi karena mobilisasi material via laut (island factor)
   const rates = {
-    cleaning: 75000,     // per m3 (untuk sedimentasi/sumbatan)
-    majorRepair: 1500000, // per meter panjang (untuk pasangan batu/beton rusak berat)
-    minorRepair: 450000,  // per meter panjang (untuk kerusakan ringan)
+    cleaning: 120000,     // per m3 (Normalisasi sedimen manual + angkut)
+    majorRepair: 2200000, // per meter (Rehabilitasi total pasangan batu / precast)
+    minorRepair: 850000,  // per meter (Pemeliharaan/siaran pasangan batu rusak ringan)
   };
 
   let estimatedCost = 0;
@@ -55,8 +57,8 @@ export function CostEstimator({ segment }: CostEstimatorProps) {
               {estimatedCost > 0 ? formatRupiah(estimatedCost) : 'Rp 0'}
             </span>
             {estimatedCost > 0 && (
-              <span className="text-[10px] text-slate-400">
-                (Estimasi kasar PUPR SDA Taliabu)
+              <span className="text-[10px] text-slate-400 font-medium">
+                (Standar SHS Kab. Pulau Taliabu)
               </span>
             )}
           </div>

@@ -42,9 +42,9 @@ export default function PrintReportPage() {
 
   const calculateRAB = (seg: DrainageSegment) => {
     const vol = Number(seg.length_m) * (Number(seg.width_cm) / 100) * (Number(seg.depth_cm) / 100);
-    if (seg.condition === 'tersumbat') return vol * 75000;
-    if (seg.condition === 'rusak_berat') return Number(seg.length_m) * 1500000;
-    if (seg.condition === 'rusak_ringan') return Number(seg.length_m) * 450000;
+    if (seg.condition === 'tersumbat') return vol * 120000;
+    if (seg.condition === 'rusak_berat') return Number(seg.length_m) * 2200000;
+    if (seg.condition === 'rusak_ringan') return Number(seg.length_m) * 850000;
     return 0;
   };
 
