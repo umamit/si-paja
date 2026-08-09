@@ -51,11 +51,14 @@ export default function LoginPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-pupr.png" alt="PUPR Logo" className="w-full h-auto object-contain" />
           </div>
-          <h2 className="text-center text-xl font-extrabold tracking-tight text-white uppercase">
-            SIG-Drainase Bobong
+          <h2 className="text-center text-2xl font-black tracking-wider text-white uppercase">
+            SIPAJA
           </h2>
-          <p className="mt-1 text-center text-[10px] uppercase font-bold tracking-wider text-slate-400">
-            Dinas Pekerjaan Umum & Penataan Ruang Kabupaten Pulau Taliabu
+          <p className="text-center text-[9px] uppercase font-bold tracking-widest text-[#ffcc00] -mt-1 mb-2">
+            Pulau Taliabu
+          </p>
+          <p className="text-center text-[9px] font-bold tracking-wider text-slate-400 uppercase">
+            Dinas Pekerjaan Umum & Penataan Ruang
           </p>
         </div>
 

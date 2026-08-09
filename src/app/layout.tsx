@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SIG-Drainase Bobong | Dinas PUPR Pulau Taliabu",
-  description: "Sistem Informasi Geografis Pemetaan Drainase Kota Bobong, Dinas PUPR Pulau Taliabu",
+  title: "SIPAJA Pulau Taliabu | Dinas PUPR",
+  description: "Sistem Informasi Pemetaan dan Analisa Jaringan Drainase Terintegrasi di Pulau Taliabu - Dinas Pekerjaan Umum dan Penataan Ruang",
 };
 
 export default function RootLayout({

@@ -49,9 +49,9 @@ export default function DashboardPage() {
       <div className="space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Overview SIG Drainase</h2>
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Overview SIPAJA Pulau Taliabu</h2>
             <p className="text-sm text-slate-500">
-              Selamat datang kembali, {profile?.full_name || 'Surveyor'}. Berikut ringkasan survei Bobong.
+              Selamat datang kembali, {profile?.full_name || 'Surveyor'}. Berikut ringkasan pemetaan drainase Bobong.
             </p>
           </div>
           <div className="flex items-center space-x-3">

@@ -49,8 +49,8 @@ export function Sidebar() {
         
         {!isCollapsed && (
           <div className="flex-1 min-w-0 transition-opacity duration-200">
-            <h1 className="font-bold text-xs leading-tight truncate">PUPR Pulau Taliabu</h1>
-            <p className="text-[9px] text-slate-400 truncate">SIG Drainase Bobong</p>
+            <h1 className="font-bold text-sm tracking-wide leading-tight text-white uppercase truncate">SIPAJA</h1>
+            <p className="text-[8px] tracking-widest text-amber-400 uppercase font-bold truncate">Pulau Taliabu</p>
           </div>
         )}
 
