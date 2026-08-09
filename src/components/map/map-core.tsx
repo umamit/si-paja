@@ -21,8 +21,8 @@ interface MapCoreProps {
 }
 
 const floodHotspots = [
-  { center: [-1.8795, 124.4810] as [number, number], radius: 140, desc: 'Hotspot Genangan Jl. Sultan Hasanuddin' },
-  { center: [-1.8818, 124.4830] as [number, number], radius: 100, desc: 'Hotspot Genangan Area Pelabuhan Bobong' },
+  { center: [-1.9455, 124.3770] as [number, number], radius: 140, desc: 'Hotspot Genangan Jl. Sultan Hasanuddin' },
+  { center: [-1.9475, 124.3800] as [number, number], radius: 100, desc: 'Hotspot Genangan Area Pelabuhan Bobong' },
 ];
 
 export function MapCore({ segments }: MapCoreProps) {
@@ -32,8 +32,8 @@ export function MapCore({ segments }: MapCoreProps) {
     fixLeafletIcon();
   }, []);
 
-  const centerLat = -1.8795;
-  const centerLng = 124.4815;
+  const centerLat = -1.9450;
+  const centerLng = 124.3790;
 
   const conditionColors: Record<string, string> = {
     baik: '#10b981',
