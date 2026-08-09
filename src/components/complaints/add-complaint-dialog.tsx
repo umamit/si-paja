@@ -44,31 +44,43 @@ export function AddComplaintDialog({ onSuccess }: AddComplaintDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2" />}>
+      <DialogTrigger render={<Button className="bg-[#003366] hover:bg-[#002244] text-white gap-2 h-9 text-xs font-bold uppercase tracking-wider px-4 rounded-lg shadow-sm" />}>
         <PlusCircle className="h-4.5 w-4.5" />Kirim Aduan Warga
       </DialogTrigger>
-      <DialogContent className="max-w-md bg-white rounded-xl">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-bold">Form Aduan Kerusakan / Sumbatan Drainase</DialogTitle>
+      <DialogContent className="max-w-md bg-white border border-slate-200 border-t-4 border-t-[#ffcc00] p-6 rounded-2xl shadow-xl text-slate-800">
+        <DialogHeader className="border-b pb-3">
+          <DialogTitle className="text-base font-extrabold text-slate-900 uppercase tracking-wide">Form Aduan Jaringan Drainase</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
-          <Input placeholder="Nama lengkap Anda..." value={name} onChange={(e) => setName(e.target.value)} required />
-          <Input placeholder="Nomor kontak/HP aktif..." value={contact} onChange={(e) => setContact(e.target.value)} required />
-          <Input placeholder="Deskripsi lokasi aduan (misal: Jl. Mawar dekat masjid)..." value={location} onChange={(e) => setLocation(e.target.value)} required />
+        
+        <form onSubmit={handleSubmit} className="space-y-4 pt-3">
+          <div className="space-y-1">
+            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider pl-0.5">Nama Pelapor</label>
+            <Input placeholder="Masukkan nama lengkap Anda..." value={name} onChange={(e) => setName(e.target.value)} className="text-xs h-9 bg-slate-50/50" required />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider pl-0.5">Kontak Pelapor</label>
+            <Input placeholder="Nomor HP aktif (WhatsApp)..." value={contact} onChange={(e) => setContact(e.target.value)} className="text-xs h-9 bg-slate-50/50" required />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider pl-0.5">Lokasi Genangan / Sumbatan</label>
+            <Input placeholder="Jl. Mawar RT 02 dekat masjid Al-Ikhlas..." value={location} onChange={(e) => setLocation(e.target.value)} className="text-xs h-9 bg-slate-50/50" required />
+          </div>
           
           <div className="space-y-1">
-            <label className="text-[10px] uppercase font-bold text-slate-400">Deskripsi Masalah</label>
+            <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider pl-0.5">Deskripsi Masalah</label>
             <textarea
-              placeholder="Jelaskan kondisi sumbatan/kerusakan drainase secara detail..."
+              placeholder="Jelaskan secara detail masalah sumbatan atau kerusakan parit..."
               value={issue}
               onChange={(e) => setIssue(e.target.value)}
-              className="w-full text-sm border rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-emerald-500 bg-white"
+              className="w-full text-xs border border-slate-200 rounded-xl p-3 outline-none focus:ring-1 focus:ring-[#003366] focus:border-[#003366] bg-slate-50/50 min-h-[80px]"
               rows={3}
               required
             />
           </div>
 
-          <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" disabled={loading}>
+          <Button type="submit" className="w-full bg-[#003366] hover:bg-[#002244] text-white font-bold h-10 rounded-xl shadow-md mt-6 transition-all duration-200" disabled={loading}>
             {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}Kirim Pengaduan
           </Button>
         </form>

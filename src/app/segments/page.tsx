@@ -103,20 +103,22 @@ function SegmentsContent() {
               <Button variant="outline" className="gap-2 bg-white"><Printer className="h-4.5 w-4.5" />Cetak Laporan</Button>
             </Link>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger render={<Button className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2" />}>
+              <DialogTrigger render={<Button className="bg-[#003366] hover:bg-[#002244] text-white gap-2 h-9 text-xs font-bold uppercase tracking-wider px-4 rounded-lg shadow-sm" />}>
                 <Plus className="h-4.5 w-4.5" />Tambah Segmen / GPS
               </DialogTrigger>
-              <DialogContent className="max-w-lg bg-white rounded-xl">
-                <DialogHeader><DialogTitle>Tambah Data Drainase</DialogTitle></DialogHeader>
+              <DialogContent className="max-w-lg bg-white border border-slate-200 border-t-4 border-t-[#ffcc00] p-6 rounded-2xl shadow-xl text-slate-800">
+                <DialogHeader className="border-b pb-2.5 mb-4">
+                  <DialogTitle className="text-base font-extrabold text-slate-900 uppercase tracking-wide">Tambah Data Drainase</DialogTitle>
+                </DialogHeader>
                 <Tabs defaultValue="manual" className="w-full">
                   <TabsList className="grid w-full grid-cols-2 bg-slate-100 p-1 rounded-lg">
-                    <TabsTrigger value="manual" className="rounded-md">Survei Manual (GPS Ponsel)</TabsTrigger>
-                    <TabsTrigger value="gpx" className="rounded-md flex items-center gap-1.5"><Upload className="h-3.5 w-3.5" />Impor GPX</TabsTrigger>
+                    <TabsTrigger value="manual" className="rounded-md text-xs font-semibold">Survei Manual (GPS Ponsel)</TabsTrigger>
+                    <TabsTrigger value="gpx" className="rounded-md flex items-center justify-center gap-1.5 text-xs font-semibold"><Upload className="h-3.5 w-3.5" />Impor GPX / KML</TabsTrigger>
                   </TabsList>
-                  <TabsContent value="manual" className="mt-4">
+                  <TabsContent value="manual" className="mt-3">
                     <SurveyForm onSuccess={handleAddSegment} surveyorId={profile?.id} />
                   </TabsContent>
-                  <TabsContent value="gpx" className="mt-4">
+                  <TabsContent value="gpx" className="mt-3">
                     <GpxImporter onSuccess={handleAddSegment} surveyorId={profile?.id} />
                   </TabsContent>
                 </Tabs>
