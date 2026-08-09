@@ -55,7 +55,7 @@ export default function LoginPage() {
             SIG-Drainase Bobong
           </h2>
           <p className="mt-1 text-center text-[10px] uppercase font-bold tracking-wider text-slate-400">
-            Dinas Pekerjaan Umum & Penataan Ruang Taliabu
+            Dinas Pekerjaan Umum & Penataan Ruang Kabupaten Pulau Taliabu
           </p>
         </div>
 
@@ -109,7 +109,7 @@ export default function LoginPage() {
 
       {/* Footer Branding */}
       <p className="absolute bottom-6 text-[10px] text-slate-500 tracking-wide uppercase">
-        Bidang Sumber Daya Air &bull; Kabupaten Taliabu
+        Bidang Sumber Daya Air &bull; Kabupaten Pulau Taliabu
       </p>
     </div>
   );
