@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Map, ListPlus, LogOut, Droplets } from 'lucide-react';
+import { LayoutDashboard, Map, ListPlus, LogOut, Droplets, MessageSquare } from 'lucide-react';
 import { signOut } from '@/services/auth/sign-out';
 import { useRouter } from 'next/navigation';
 
@@ -23,6 +23,7 @@ export function Sidebar() {
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/map', label: 'Peta GIS', icon: Map },
     { href: '/segments', label: 'Segmen Drainase', icon: ListPlus },
+    { href: '/complaints', label: 'Aduan Warga', icon: MessageSquare },
   ];
 
   return (

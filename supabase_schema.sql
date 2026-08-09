@@ -19,18 +19,19 @@ create policy "Users can update their own profile" on profiles
 -- 2. Drainage Segments (Data Segment Drainase)
 create table drainage_segments (
   id uuid default gen_random_uuid() primary key,
-  name text not null, -- Nama jalan atau nama segmen (e.g., "Jalan Gajah Mada Segmen 1")
+  name text not null,
   start_lat double precision not null,
   start_lng double precision not null,
   end_lat double precision not null,
   end_lng double precision not null,
-  length_m numeric not null, -- Panjang dalam meter
-  width_cm numeric not null, -- Lebar dalam centimeter
-  depth_cm numeric not null, -- Kedalaman dalam centimeter
+  length_m numeric not null,
+  width_cm numeric not null,
+  depth_cm numeric not null,
   material text check (material in ('pasangan_batu', 'beton_precast', 'tanah', 'lainnya')) not null,
   condition text check (condition in ('baik', 'rusak_ringan', 'rusak_berat', 'tersumbat')) not null,
   description text,
-  photo_url text, -- Foto kondisi fisik drainase
+  photo_url text, -- Foto Sebelum Perbaikan
+  photo_after_url text, -- Foto Setelah Perbaikan
   gps_source text check (gps_source in ('device_gps', 'file_import', 'manual_input')) default 'manual_input' not null,
   surveyor_id uuid references profiles(id) on delete set null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
@@ -51,3 +52,45 @@ create policy "Drainage segments are updatable by authenticated surveyors/admins
 
 create policy "Drainage segments are deletable by authenticated admins" on drainage_segments
   for delete to authenticated using (true);
+
+-- 3. Maintenance Logs (Log Pemeliharaan)
+create table maintenance_logs (
+  id uuid default gen_random_uuid() primary key,
+  segment_id uuid references drainage_segments(id) on delete cascade not null,
+  action_type text check (action_type in ('inspeksi', 'pemeliharaan', 'perbaikan', 'update_status')) not null,
+  description text not null,
+  operator_name text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table maintenance_logs enable row level security;
+
+create policy "Maintenance logs are viewable by authenticated users" on maintenance_logs
+  for select to authenticated using (true);
+
+create policy "Maintenance logs are insertable by authenticated users" on maintenance_logs
+  for insert to authenticated with check (true);
+
+-- 4. Public Complaints (Aduan Masyarakat)
+create table public_complaints (
+  id uuid default gen_random_uuid() primary key,
+  reporter_name text not null,
+  reporter_contact text not null,
+  location_desc text not null,
+  issue_desc text not null,
+  photo_url text,
+  status text check (status in ('menunggu', 'ditinjau', 'selesai')) default 'menunggu' not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public_complaints enable row level security;
+
+create policy "Public complaints are viewable by everyone" on public_complaints
+  for select using (true);
+
+create policy "Public complaints can be created by anyone" on public_complaints
+  for insert with check (true);
+
+create policy "Public complaints can be updated by authenticated users" on public_complaints
+  for update to authenticated using (true);
+

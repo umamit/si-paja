@@ -27,7 +27,33 @@ export interface DrainageSegment {
   condition: PhysicalCondition;
   description?: string;
   photo_url?: string;
+  photo_after_url?: string;
   gps_source: GpsSourceType;
   surveyor_id?: string;
   created_at: string;
 }
+
+export type LogActionType = 'inspeksi' | 'pemeliharaan' | 'perbaikan' | 'update_status';
+
+export interface MaintenanceLog {
+  id: string;
+  segment_id: string;
+  action_type: LogActionType;
+  description: string;
+  operator_name: string;
+  created_at: string;
+}
+
+export type ComplaintStatus = 'menunggu' | 'ditinjau' | 'selesai';
+
+export interface PublicComplaint {
+  id: string;
+  reporter_name: string;
+  reporter_contact: string;
+  location_desc: string;
+  issue_desc: string;
+  photo_url?: string;
+  status: ComplaintStatus;
+  created_at: string;
+}
+
