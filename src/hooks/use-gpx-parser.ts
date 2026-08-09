@@ -1,0 +1,97 @@
+import { useState, useCallback } from 'react';
+
+interface ParsedGpx {
+  name: string;
+  startLat: number;
+  startLng: number;
+  endLat: number;
+  endLng: number;
+  lengthM: number;
+}
+
+function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371e3; // Earth radius in meters
+  const p1 = (lat1 * Math.PI) / 180;
+  const p2 = (lat2 * Math.PI) / 180;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(p1) * Math.cos(p2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c;
+}
+
+export function useGpxParser() {
+  const [parsing, setParsing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const parseGpx = useCallback(async (file: File): Promise<ParsedGpx> => {
+    setParsing(true);
+    setError(null);
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const text = e.target?.result as string;
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(text, 'text/xml');
+
+          const trkpts = xmlDoc.getElementsByTagName('trkpt');
+          if (trkpts.length === 0) {
+            throw new Error('Tidak ditemukan titik koordinat (trkpt) dalam file GPX.');
+          }
+
+          const points: { lat: number; lon: number }[] = [];
+          for (let i = 0; i < trkpts.length; i++) {
+            const lat = parseFloat(trkpts[i].getAttribute('lat') || '0');
+            const lon = parseFloat(trkpts[i].getAttribute('lon') || '0');
+            points.push({ lat, lon });
+          }
+
+          const start = points[0];
+          const end = points[points.length - 1];
+
+          // Hitung total panjang jalur dengan menjumlahkan jarak antar titik
+          let totalLength = 0;
+          for (let i = 0; i < points.length - 1; i++) {
+            totalLength += haversineDistance(
+              points[i].lat,
+              points[i].lon,
+              points[i + 1].lat,
+              points[i + 1].lon
+            );
+          }
+
+          const nameNode = xmlDoc.getElementsByTagName('name')[0];
+          const name = nameNode?.textContent || file.name.replace(/\.[^/.]+$/, '');
+
+          resolve({
+            name,
+            startLat: start.lat,
+            startLng: start.lon,
+            endLat: end.lat,
+            endLng: end.lon,
+            lengthM: parseFloat(totalLength.toFixed(1)),
+          });
+        } catch (err: any) {
+          setError(err.message || 'Gagal membaca file GPX.');
+          reject(err);
+        } finally {
+          setParsing(false);
+        }
+      };
+      reader.onerror = () => {
+        setError('Gagal membaca file.');
+        setParsing(false);
+        reject(new Error('Gagal membaca file.'));
+      };
+      reader.readAsText(file);
+    });
+  }, []);
+
+  return { parseGpx, parsing, error };
+}
