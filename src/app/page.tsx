@@ -52,7 +52,7 @@ export default function LoginPage() {
             <img src="/logo-pupr.png" alt="PUPR Logo" className="w-full h-auto object-contain" />
           </div>
           <h2 className="text-center text-2xl font-black tracking-wider text-white uppercase">
-            SIPAJA
+            SI-PAJA
           </h2>
           <p className="text-center text-[9px] uppercase font-bold tracking-widest text-[#ffcc00] -mt-1 mb-2">
             Pulau Taliabu

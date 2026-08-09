@@ -49,7 +49,7 @@ export function Sidebar() {
         
         {!isCollapsed && (
           <div className="flex-1 min-w-0 transition-opacity duration-200">
-            <h1 className="font-bold text-sm tracking-wide leading-tight text-white uppercase truncate">SIPAJA</h1>
+            <h1 className="font-bold text-sm tracking-wide leading-tight text-white uppercase truncate">SI-PAJA</h1>
             <p className="text-[8px] tracking-widest text-amber-400 uppercase font-bold truncate">Pulau Taliabu</p>
           </div>
         )}

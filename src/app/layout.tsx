@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SIPAJA Pulau Taliabu | Dinas PUPR",
+  title: "SI-PAJA Pulau Taliabu | Dinas PUPR",
   description: "Sistem Informasi Pemetaan dan Analisa Jaringan Drainase Terintegrasi di Pulau Taliabu - Dinas Pekerjaan Umum dan Penataan Ruang",
 };
 
