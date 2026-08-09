@@ -43,14 +43,14 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className={`bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col h-screen sticky top-0 transition-all duration-300 relative ${isCollapsed ? 'w-16' : 'w-64'}`}>
+    <aside className={`bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col h-screen sticky top-0 transition-all duration-300 z-40 relative ${isCollapsed ? 'w-16' : 'w-64'}`}>
       {/* Floating Toggle Button on the border edge */}
       <button 
         onClick={toggleCollapse} 
         title={isCollapsed ? "Buka Sidebar" : "Lipat Sidebar"}
-        className="absolute -right-3 top-5.5 z-[99] h-6 w-6 rounded-full border border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 shrink-0"
+        className="absolute -right-3.5 top-5.5 z-[99] h-7 w-7 rounded-full border border-slate-800 bg-slate-900 text-slate-400 hover:bg-[#ffcc00] hover:text-slate-950 hover:border-[#ffcc00] flex items-center justify-center shadow-lg transition-all hover:scale-110 shrink-0 cursor-pointer"
       >
-        {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
+        {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
       </button>
 
       <div className={`p-4 border-b border-slate-800 flex items-center gap-3 bg-slate-950/40 min-h-[73px] overflow-hidden ${
