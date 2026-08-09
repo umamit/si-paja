@@ -105,9 +105,9 @@ export function SegmentDetail({ segment, isOpen, onClose }: SegmentDetailProps) 
         </div>
 
         <div className="border-t border-slate-100 pt-3 mt-2 grid grid-cols-3 gap-2 text-center bg-slate-50/50 p-2.5 rounded-lg">
-          <div><p className="text-[9px] text-slate-400">Panjang</p><p className="text-base font-bold text-slate-900">{segment.length_m} m</p></div>
-          <div><p className="text-[9px] text-slate-400">Lebar</p><p className="text-base font-bold text-slate-900">{segment.width_cm} cm</p></div>
-          <div><p className="text-[9px] text-slate-400">Kedalaman</p><p className="text-base font-bold text-slate-900">{segment.depth_cm} cm</p></div>
+          <div><p className="text-[9px] text-slate-400">Panjang (L)</p><p className="text-base font-bold text-slate-900">{segment.length_m} m</p></div>
+          <div><p className="text-[9px] text-slate-400">Lebar (B)</p><p className="text-base font-bold text-slate-900">{segment.width_cm} cm</p></div>
+          <div><p className="text-[9px] text-slate-400">Tinggi (H)</p><p className="text-base font-bold text-slate-900">{segment.depth_cm} cm</p></div>
         </div>
 
         <CostEstimator segment={segment} />

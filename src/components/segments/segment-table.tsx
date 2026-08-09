@@ -61,7 +61,7 @@ export function SegmentTable({ segments, onViewDetails, onDelete, isAdmin }: Seg
             <thead className="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="px-6 py-4">Nama Segmen</th>
-                <th className="px-6 py-4">Dimensi (P x L x D)</th>
+                <th className="px-6 py-4">Dimensi (L &times; B &times; H)</th>
                 <th className="px-6 py-4">Material</th>
                 <th className="px-6 py-4">Kondisi</th>
                 <th className="px-6 py-4 text-right">Aksi</th>
