@@ -8,7 +8,7 @@ const DynamicMap = dynamic(() => import('./map-core'), {
   loading: () => (
     <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-slate-100 rounded-xl border border-slate-200">
       <div className="flex flex-col items-center space-y-2">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003366]"></div>
         <p className="text-sm text-slate-500">Memuat peta GIS Bobong...</p>
       </div>
     </div>
