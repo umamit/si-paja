@@ -43,10 +43,21 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className={`bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col h-screen sticky top-0 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
-      <div className="p-4 border-b border-slate-800 flex items-center justify-between gap-2 bg-slate-950/40 min-h-[73px]">
+    <aside className={`bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col h-screen sticky top-0 transition-all duration-300 relative ${isCollapsed ? 'w-16' : 'w-64'}`}>
+      {/* Floating Toggle Button on the border edge */}
+      <button 
+        onClick={toggleCollapse} 
+        title={isCollapsed ? "Buka Sidebar" : "Lipat Sidebar"}
+        className="absolute -right-3 top-5.5 z-[99] h-6 w-6 rounded-full border border-slate-800 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 shrink-0"
+      >
+        {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
+      </button>
+
+      <div className={`p-4 border-b border-slate-800 flex items-center gap-3 bg-slate-950/40 min-h-[73px] overflow-hidden ${
+        isCollapsed ? 'justify-center' : 'justify-start'
+      }`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-pupr.png" alt="PUPR" className="h-8 w-auto shrink-0 mx-auto" />
+        <img src="/logo-pupr.png" alt="PUPR" className="h-8 w-auto shrink-0" />
         
         {!isCollapsed && (
           <div className="flex-1 min-w-0 transition-opacity duration-200">
@@ -54,10 +65,6 @@ export function Sidebar() {
             <p className="text-[8px] tracking-widest text-amber-400 uppercase font-bold truncate">Pulau Taliabu</p>
           </div>
         )}
-
-        <button onClick={toggleCollapse} className="p-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-350 hover:text-slate-100 transition-colors shrink-0">
-          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </button>
       </div>
 
       <nav className="flex-1 p-3 space-y-1">
