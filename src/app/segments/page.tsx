@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Upload, Loader2, Printer } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import Link from 'next/link';
+import { SkeletonLoader } from '@/components/shared/skeleton-loader';
 
 function SegmentsContent() {
   const router = useRouter();
@@ -85,11 +86,7 @@ function SegmentsContent() {
   };
 
   if (loading) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-      </div>
-    );
+    return <SkeletonLoader />;
   }
 
   return (

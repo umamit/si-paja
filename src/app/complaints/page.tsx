@@ -11,6 +11,7 @@ import { AppLayout } from '@/components/shared/layout';
 import { ComplaintList } from '@/components/complaints/complaint-list';
 import { AddComplaintDialog } from '@/components/complaints/add-complaint-dialog';
 import { Loader2 } from 'lucide-react';
+import { SkeletonLoader } from '@/components/shared/skeleton-loader';
 
 export default function ComplaintsPage() {
   const router = useRouter();
@@ -71,11 +72,7 @@ export default function ComplaintsPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-      </div>
-    );
+    return <SkeletonLoader />;
   }
 
   return (

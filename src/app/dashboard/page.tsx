@@ -9,6 +9,7 @@ import { AppLayout } from '@/components/shared/layout';
 import { StatsGrid } from '@/components/dashboard/stats-grid';
 import { ConditionChart } from '@/components/dashboard/condition-chart';
 import { MaterialChart } from '@/components/dashboard/material-chart';
+import { SkeletonLoader } from '@/components/shared/skeleton-loader';
 import { Button } from '@/components/ui/button';
 import { Map, ListPlus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -40,14 +41,7 @@ export default function DashboardPage() {
   }, [router]);
 
   if (loading) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
-        <div className="flex flex-col items-center space-y-2">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-          <p className="text-sm text-slate-500">Memuat dashboard internal...</p>
-        </div>
-      </div>
-    );
+    return <SkeletonLoader />;
   }
 
   return (
