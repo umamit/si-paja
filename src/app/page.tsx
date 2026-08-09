@@ -60,6 +60,9 @@ export default function LoginPage() {
           <p className="text-center text-[9px] font-bold tracking-wider text-slate-400 uppercase">
             Dinas Pekerjaan Umum & Penataan Ruang
           </p>
+          <p className="text-center text-[8px] font-semibold tracking-widest text-[#ffcc00]/80 uppercase mt-1">
+            Bidang Sumber Daya Air
+          </p>
         </div>
 
         <form className="space-y-4.5" onSubmit={handleSubmit}>
