@@ -45,10 +45,9 @@ export default function LoginPage() {
 
       <div className="w-full max-w-md space-y-8 bg-slate-900/50 backdrop-blur border border-slate-800 p-8 rounded-2xl shadow-2xl relative z-10">
         <div className="flex flex-col items-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
-            <Droplets className="h-7 w-7 animate-pulse" />
-          </div>
-          <h2 className="mt-6 text-center text-2xl font-bold tracking-tight text-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-pupr.png" alt="PUPR Logo" className="h-16 w-auto object-contain mb-1" />
+          <h2 className="mt-4 text-center text-2xl font-bold tracking-tight text-white">
             SIG-Drainase Bobong
           </h2>
           <p className="mt-1 text-center text-xs text-slate-400">

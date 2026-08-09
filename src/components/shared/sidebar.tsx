@@ -28,11 +28,12 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-slate-900 border-r border-slate-800 text-slate-100 flex flex-col h-screen sticky top-0">
-      <div className="p-6 border-b border-slate-800 flex items-center space-x-3">
-        <Droplets className="h-8 w-8 text-emerald-400 animate-pulse" />
+      <div className="p-6 border-b border-slate-800 flex items-center space-x-3 bg-slate-950/40">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-pupr.png" alt="PUPR" className="h-8 w-auto shrink-0" />
         <div>
-          <h1 className="font-bold text-lg leading-tight">PUPR Taliabu</h1>
-          <p className="text-xs text-slate-400">SIG Drainase Bobong</p>
+          <h1 className="font-bold text-base leading-tight">PUPR Taliabu</h1>
+          <p className="text-[10px] text-slate-400">SIG Drainase Bobong</p>
         </div>
       </div>
 

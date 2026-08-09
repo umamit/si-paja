@@ -68,12 +68,16 @@ export default function PrintReportPage() {
       </div>
 
       {/* Kop Surat Resmi Dinas PUPR */}
-      <div className="text-center border-b-4 border-double border-slate-900 pb-4 mb-6">
-        <h2 className="text-xl font-bold uppercase tracking-wide">Pemerintah Kabupaten Pulau Taliabu</h2>
-        <h1 className="text-2xl font-extrabold uppercase tracking-wide mt-1">Dinas Pekerjaan Umum dan Penataan Ruang</h1>
-        <p className="text-xs italic text-slate-500 mt-1">
-          Alamat: Jalan Jalur Dua, Bobong, Pulau Taliabu, Maluku Utara &bull; Email: pupr@talibukab.go.id
-        </p>
+      <div className="flex items-center justify-center border-b-4 border-double border-slate-900 pb-4 mb-6 gap-6">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-pupr.png" alt="Logo PUPR" className="h-16 w-auto object-contain shrink-0" />
+        <div className="text-center">
+          <h2 className="text-lg font-bold uppercase tracking-wide">Pemerintah Kabupaten Pulau Taliabu</h2>
+          <h1 className="text-xl font-extrabold uppercase tracking-wide mt-0.5">Dinas Pekerjaan Umum dan Penataan Ruang</h1>
+          <p className="text-[10px] italic text-slate-500 mt-0.5">
+            Alamat: Jalan Jalur Dua, Bobong, Pulau Taliabu, Maluku Utara &bull; Email: pupr@taliabukab.go.id
+          </p>
+        </div>
       </div>
 
       {/* Judul Laporan */}
