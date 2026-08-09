@@ -127,6 +127,15 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
           </Button>
         </div>
       )}
+      {/* Download Sample Files for easy testing */}
+      <div className="flex items-center justify-between text-[10px] text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100">
+        <span>Belum punya file koordinat?</span>
+        <div className="flex gap-2 font-bold">
+          <a href="/samples/sample.gpx" download className="text-[#003366] hover:underline">Unduh GPX (.gpx)</a>
+          <span className="text-slate-350">&bull;</span>
+          <a href="/samples/sample.kml" download className="text-[#003366] hover:underline">Unduh KML (.kml)</a>
+        </div>
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Map, ListPlus, LogOut, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Map, ListPlus, LogOut, MessageSquare, ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
 import { signOut } from '@/services/auth/sign-out';
 import { Button } from '@/components/ui/button';
 
@@ -39,6 +39,7 @@ export function Sidebar() {
     { href: '/map', label: 'Peta GIS', icon: Map },
     { href: '/segments', label: 'Segmen Drainase', icon: ListPlus },
     { href: '/complaints', label: 'Aduan Warga', icon: MessageSquare },
+    { href: '/help', label: 'Panduan', icon: HelpCircle },
   ];
 
   return (

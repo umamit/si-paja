@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Contoh Rencana Saluran Pelabuhan Bobong</name>
+    <Placemark>
+      <name>Rencana Saluran Pelabuhan</name>
+      <description>Elevasi Hulu: 3.8m, Hilir: 1.2m</description>
+      <LineString>
+        <coordinates>
+          124.3790,-1.9465,3.8
+          124.3810,-1.9485,1.2
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>
