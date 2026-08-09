@@ -105,7 +105,7 @@ export default function LoginPage() {
             disabled={loading}
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            Masuk Portal SIG
+            Masuk Portal SI-PAJA
           </Button>
         </form>
       </div>
