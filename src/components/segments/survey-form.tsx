@@ -15,7 +15,7 @@ interface SurveyFormProps {
 
 export function SurveyForm({ onSuccess, surveyorId }: SurveyFormProps) {
   const [name, setName] = useState('');
-  const [material, setMaterial] = useState<'pasangan_batu' | 'beton_precast' | 'tanah' | 'lainnya'>('pasangan_batu');
+  const [material, setMaterial] = useState<'pasangan_batu' | 'beton_precast' | 'tanah' | 'belum_ada' | 'lainnya'>('pasangan_batu');
   const [condition, setCondition] = useState<'baik' | 'rusak_ringan' | 'rusak_berat' | 'tersumbat'>('baik');
   const [lengthM, setLengthM] = useState('');
   const [widthCm, setWidthCm] = useState('');
@@ -84,6 +84,7 @@ export function SurveyForm({ onSuccess, surveyorId }: SurveyFormProps) {
             <SelectItem value="pasangan_batu">Batu Kali</SelectItem>
             <SelectItem value="beton_precast">Beton Precast</SelectItem>
             <SelectItem value="tanah">Tanah</SelectItem>
+            <SelectItem value="belum_ada">Belum Ada Drainase</SelectItem>
             <SelectItem value="lainnya">Lainnya</SelectItem>
           </SelectContent>
         </Select>

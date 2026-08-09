@@ -61,14 +61,16 @@ export default function MapCore({ segments }: MapCoreProps) {
             [seg.start_lat, seg.start_lng],
             [seg.end_lat, seg.end_lng],
           ];
-          const color = conditionColors[seg.condition] || '#64748b';
+          const isMissing = seg.material === 'belum_ada';
+          const color = isMissing ? '#ef4444' : (conditionColors[seg.condition] || '#64748b');
+          const dashArray = isMissing ? '8, 8' : undefined;
 
           return (
             <div key={seg.id}>
               {/* Draw polyline representing the drainage segment */}
               <Polyline
                 positions={positions}
-                pathOptions={{ color, weight: 6, opacity: 0.8 }}
+                pathOptions={{ color, weight: 6, opacity: 0.8, dashArray }}
               >
                 <Popup>
                   <div className="p-1 space-y-2 max-w-xs">

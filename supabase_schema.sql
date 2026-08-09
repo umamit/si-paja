@@ -27,7 +27,7 @@ create table drainage_segments (
   length_m numeric not null,
   width_cm numeric not null,
   depth_cm numeric not null,
-  material text check (material in ('pasangan_batu', 'beton_precast', 'tanah', 'lainnya')) not null,
+  material text check (material in ('pasangan_batu', 'beton_precast', 'tanah', 'belum_ada', 'lainnya')) not null,
   condition text check (condition in ('baik', 'rusak_ringan', 'rusak_berat', 'tersumbat')) not null,
   description text,
   photo_url text, -- Foto Sebelum Perbaikan

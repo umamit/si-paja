@@ -7,7 +7,7 @@ export interface Profile {
   created_at: string;
 }
 
-export type MaterialType = 'pasangan_batu' | 'beton_precast' | 'tanah' | 'lainnya';
+export type MaterialType = 'pasangan_batu' | 'beton_precast' | 'tanah' | 'belum_ada' | 'lainnya';
 
 export type PhysicalCondition = 'baik' | 'rusak_ringan' | 'rusak_berat' | 'tersumbat';
 

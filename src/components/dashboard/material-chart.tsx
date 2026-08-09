@@ -14,13 +14,14 @@ export function MaterialChart({ segments }: MaterialChartProps) {
       acc[seg.material] = (acc[seg.material] || 0) + 1;
       return acc;
     },
-    { pasangan_batu: 0, beton_precast: 0, tanah: 0, lainnya: 0 }
+    { pasangan_batu: 0, beton_precast: 0, tanah: 0, belum_ada: 0, lainnya: 0 }
   );
 
   const rawData = [
     { key: 'pasangan_batu', label: 'Batu Kali', count: counts.pasangan_batu, color: '#64748b' },
     { key: 'beton_precast', label: 'Beton Precast', count: counts.beton_precast, color: '#3b82f6' },
     { key: 'tanah', label: 'Tanah/Galian', count: counts.tanah, color: '#b45309' },
+    { key: 'belum_ada', label: 'Belum Ada', count: counts.belum_ada, color: '#ef4444' },
     { key: 'lainnya', label: 'Lainnya', count: counts.lainnya, color: '#94a3b8' },
   ];
 
