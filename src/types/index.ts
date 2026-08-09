@@ -26,6 +26,9 @@ export interface DrainageSegment {
   material: MaterialType;
   condition: PhysicalCondition;
   description?: string;
+  start_elevation_m?: number;
+  end_elevation_m?: number;
+  category?: 'existing' | 'proposed';
   photo_url?: string;
   photo_after_url?: string;
   gps_source: GpsSourceType;

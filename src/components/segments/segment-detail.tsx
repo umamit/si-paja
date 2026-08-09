@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { DrainageSegment, MaintenanceLog } from '@/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, CheckCircle2, Loader2 } from 'lucide-react';
+import { Calendar, MapPin } from 'lucide-react';
 import { getLogs } from '@/services/logs/get-logs';
 import { createLog, CreateLogInput } from '@/services/logs/create-log';
 import { updateSegment } from '@/services/segments/update-segment';
@@ -12,6 +12,8 @@ import { supabase } from '@/lib/supabase/client';
 import { CostEstimator } from './cost-estimator';
 import { LogList } from './log-list';
 import { AddLogDialog } from './add-log-dialog';
+import { PhotoComparison } from './photo-comparison';
+import { HydrologyAnalysis } from './hydrology-analysis';
 
 interface SegmentDetailProps {
   segment: DrainageSegment | null;
@@ -78,7 +80,7 @@ export function SegmentDetail({ segment, isOpen, onClose }: SegmentDetailProps) 
     baik: 'bg-emerald-100 text-emerald-800 border-emerald-250',
     rusak_ringan: 'bg-amber-100 text-amber-800 border-amber-250',
     rusak_berat: 'bg-rose-100 text-rose-800 border-rose-250',
-    tersumbat: 'bg-orange-100 text-orange-800 border-orange-250',
+    tersumbat: 'bg-orange-100 text-orange-850 border-orange-250',
   };
 
   return (
@@ -86,42 +88,10 @@ export function SegmentDetail({ segment, isOpen, onClose }: SegmentDetailProps) 
       <DialogContent className="max-w-md bg-white border border-slate-100 shadow-xl rounded-xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-slate-900 leading-tight">{segment.name}</DialogTitle>
-          <DialogDescription className="text-xs text-slate-400">Detail spesifikasi teknik, RAB, dan log riwayat pemeliharaan</DialogDescription>
+          <DialogDescription className="text-xs text-slate-400">Detail spesifikasi teknik, analisis hidrologi, & anggaran</DialogDescription>
         </DialogHeader>
 
-        {/* Before / After Photo Comparison */}
-        <div className="grid grid-cols-2 gap-3 mt-1">
-          {segment.photo_url && (
-            <div className="space-y-1">
-              <span className="text-[9px] font-bold text-slate-400">SEBELUM (BEFORE)</span>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={segment.photo_url} alt="Before" className="w-full h-28 object-cover rounded-lg border border-slate-100" />
-            </div>
-          )}
-          <div className="space-y-1">
-            <span className="text-[9px] font-bold text-slate-400">SESUDAH (AFTER)</span>
-            {segment.photo_after_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={segment.photo_after_url} alt="After" className="w-full h-28 object-cover rounded-lg border border-slate-100" />
-            ) : (
-              <div className="relative flex flex-col justify-center items-center h-28 border border-dashed rounded-lg bg-slate-50 text-slate-400 text-center p-2">
-                {uploadingAfter ? (
-                  <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
-                ) : (
-                  <>
-                    <span className="text-[10px] mb-1">Belum diperbaiki</span>
-                    {segment.condition !== 'baik' && (
-                      <label className="text-[9px] bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded cursor-pointer transition flex items-center gap-1 font-semibold">
-                        <CheckCircle2 className="h-3 w-3" />Selesaikan
-                        <input type="file" accept="image/*" onChange={handleCompleteRepair} className="hidden" />
-                      </label>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        <PhotoComparison segment={segment} uploadingAfter={uploadingAfter} onCompleteRepair={handleCompleteRepair} />
 
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div className="space-y-0.5">
@@ -141,6 +111,7 @@ export function SegmentDetail({ segment, isOpen, onClose }: SegmentDetailProps) 
         </div>
 
         <CostEstimator segment={segment} />
+        <HydrologyAnalysis segment={segment} />
 
         <div className="space-y-2 text-xs text-slate-650 border-t pt-3">
           <div className="flex items-start gap-2"><MapPin className="h-4 w-4 text-emerald-600 mt-0.5" />
@@ -156,7 +127,6 @@ export function SegmentDetail({ segment, isOpen, onClose }: SegmentDetailProps) 
           </div>
         </div>
 
-        {/* Maintenance Log Timeline */}
         <div className="border-t border-slate-100 pt-3">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[10px] uppercase font-bold text-slate-400">Log Pemeliharaan</span>

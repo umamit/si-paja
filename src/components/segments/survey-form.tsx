@@ -1,20 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import { CreateSegmentInput } from '@/services/segments/create-segment';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CreateSegmentInput } from '@/services/segments/create-segment';
-import { Navigation, Loader2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase/client';
+import { Loader2, Navigation } from 'lucide-react';
 
 interface SurveyFormProps {
   onSuccess: (input: CreateSegmentInput) => void;
   surveyorId?: string;
 }
 
+const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+
 export function SurveyForm({ onSuccess, surveyorId }: SurveyFormProps) {
   const [name, setName] = useState('');
+  const [category, setCategory] = useState<'existing' | 'proposed'>('existing');
   const [material, setMaterial] = useState<'pasangan_batu' | 'beton_precast' | 'tanah' | 'belum_ada' | 'lainnya'>('pasangan_batu');
   const [condition, setCondition] = useState<'baik' | 'rusak_ringan' | 'rusak_berat' | 'tersumbat'>('baik');
   const [lengthM, setLengthM] = useState('');
@@ -34,9 +37,10 @@ export function SurveyForm({ onSuccess, surveyorId }: SurveyFormProps) {
     });
   };
 
-  const handlePhotoUpload = async (file: File): Promise<string | undefined> => {
+  const handlePhotoUpload = async (file: File): Promise<string | null> => {
+    if (isPlaceholder) return URL.createObjectURL(file);
     const fileExt = file.name.split('.').pop();
-    const filePath = `segments/${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+    const filePath = `segments/${Date.now()}.${fileExt}`;
     const { error } = await supabase.storage.from('drainage-photos').upload(filePath, file);
     if (error) throw error;
     return supabase.storage.from('drainage-photos').getPublicUrl(filePath).data.publicUrl;
@@ -55,6 +59,7 @@ export function SurveyForm({ onSuccess, surveyorId }: SurveyFormProps) {
         name,
         material,
         condition,
+        category,
         length_m: parseFloat(lengthM),
         width_cm: parseFloat(widthCm),
         depth_cm: parseFloat(depthCm),
@@ -74,17 +79,25 @@ export function SurveyForm({ onSuccess, surveyorId }: SurveyFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-lg bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
-      <Input placeholder="Nama Segmen (misal: Jl. Gajah Mada Segmen A)" value={name} onChange={(e) => setName(e.target.value)} required />
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-lg bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
+      <Input placeholder="Nama Segmen (contoh: Jl. Gajah Mada Segmen A)" value={name} onChange={(e) => setName(e.target.value)} required />
       
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-2">
+        <Select value={category} onValueChange={(val: any) => setCategory(val)}>
+          <SelectTrigger><SelectValue placeholder="Kategori" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="existing">Eksisting</SelectItem>
+            <SelectItem value="proposed">Rencana</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Select value={material} onValueChange={(val: any) => setMaterial(val)}>
           <SelectTrigger><SelectValue placeholder="Material" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="pasangan_batu">Batu Kali</SelectItem>
-            <SelectItem value="beton_precast">Beton Precast</SelectItem>
+            <SelectItem value="beton_precast">Precast</SelectItem>
             <SelectItem value="tanah">Tanah</SelectItem>
-            <SelectItem value="belum_ada">Belum Ada Drainase</SelectItem>
+            <SelectItem value="belum_ada">Belum Ada</SelectItem>
             <SelectItem value="lainnya">Lainnya</SelectItem>
           </SelectContent>
         </Select>
@@ -93,8 +106,8 @@ export function SurveyForm({ onSuccess, surveyorId }: SurveyFormProps) {
           <SelectTrigger><SelectValue placeholder="Kondisi" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="baik">Baik</SelectItem>
-            <SelectItem value="rusak_ringan">Rusak Ringan</SelectItem>
-            <SelectItem value="rusak_berat">Rusak Berat</SelectItem>
+            <SelectItem value="rusak_ringan">R. Ringan</SelectItem>
+            <SelectItem value="rusak_berat">R. Berat</SelectItem>
             <SelectItem value="tersumbat">Tersumbat</SelectItem>
           </SelectContent>
         </Select>

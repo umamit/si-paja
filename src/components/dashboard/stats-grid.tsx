@@ -1,14 +1,21 @@
+'use client';
+
 import { DrainageSegment } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
-import { Activity, ShieldAlert, CheckCircle, Flame } from 'lucide-react';
+import { Activity, ShieldAlert, CheckCircle, Lightbulb } from 'lucide-react';
 
 interface StatsGridProps {
   segments: DrainageSegment[];
 }
 
 export function StatsGrid({ segments }: StatsGridProps) {
-  const totalLength = segments.reduce((sum, seg) => sum + Number(seg.length_m), 0);
-  const conditions = segments.reduce(
+  const existingSegs = segments.filter((s) => s.category !== 'proposed');
+  const proposedSegs = segments.filter((s) => s.category === 'proposed');
+
+  const existingLength = existingSegs.reduce((sum, seg) => sum + Number(seg.length_m), 0);
+  const proposedLength = proposedSegs.reduce((sum, seg) => sum + Number(seg.length_m), 0);
+
+  const conditions = existingSegs.reduce(
     (acc, seg) => {
       acc[seg.condition] = (acc[seg.condition] || 0) + 1;
       return acc;
@@ -18,30 +25,30 @@ export function StatsGrid({ segments }: StatsGridProps) {
 
   const stats = [
     {
-      title: 'Total Panjang Terpetakan',
-      value: `${(totalLength / 1000).toFixed(2)} km`,
-      desc: `${segments.length} segmen terdaftar`,
+      title: 'Total Jaringan Eksisting',
+      value: `${(existingLength / 1000).toFixed(2)} km`,
+      desc: `${existingSegs.length} segmen terdaftar di Bobong`,
       icon: Activity,
       colorClass: 'text-blue-600 bg-blue-50 border-blue-100',
     },
     {
-      title: 'Saluran Kondisi Baik',
-      value: `${conditions.baik} segmen`,
-      desc: `${((conditions.baik / (segments.length || 1)) * 100).toFixed(0)}% dari total`,
+      title: 'Usulan Masterplan (Rencana)',
+      value: `${proposedSegs.length} Rencana`,
+      desc: `Total panjang: ${(proposedLength / 1000).toFixed(2)} km`,
+      icon: Lightbulb,
+      colorClass: 'text-purple-600 bg-purple-50 border-purple-100',
+    },
+    {
+      title: 'Kondisi Eksisting Baik',
+      value: `${conditions.baik} Segmen`,
+      desc: `${((conditions.baik / (existingSegs.length || 1)) * 100).toFixed(0)}% dari eksisting`,
       icon: CheckCircle,
       colorClass: 'text-emerald-600 bg-emerald-50 border-emerald-100',
     },
     {
-      title: 'Tersumbat / Sedimen',
-      value: `${conditions.tersumbat} segmen`,
-      desc: 'Memerlukan pembersihan',
-      icon: Flame,
-      colorClass: 'text-amber-600 bg-amber-50 border-amber-100',
-    },
-    {
-      title: 'Rusak Berat',
-      value: `${conditions.rusak_berat} segmen`,
-      desc: 'Memerlukan rehabilitasi fisik',
+      title: 'Eksisting Tersumbat / Rusak',
+      value: `${conditions.tersumbat + conditions.rusak_berat + conditions.rusak_ringan} Segmen`,
+      desc: 'Butuh pemeliharaan / rehab',
       icon: ShieldAlert,
       colorClass: 'text-rose-600 bg-rose-50 border-rose-100',
     },
@@ -71,3 +78,4 @@ export function StatsGrid({ segments }: StatsGridProps) {
     </div>
   );
 }
+export default StatsGrid;

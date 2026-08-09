@@ -32,6 +32,9 @@ create table drainage_segments (
   description text,
   photo_url text, -- Foto Sebelum Perbaikan
   photo_after_url text, -- Foto Setelah Perbaikan
+  start_elevation_m numeric default 0 not null,
+  end_elevation_m numeric default 0 not null,
+  category text check (category in ('existing', 'proposed')) default 'existing' not null,
   gps_source text check (gps_source in ('device_gps', 'file_import', 'manual_input')) default 'manual_input' not null,
   surveyor_id uuid references profiles(id) on delete set null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null

@@ -9,7 +9,8 @@ interface ConditionChartProps {
 }
 
 export function ConditionChart({ segments }: ConditionChartProps) {
-  const counts = segments.reduce(
+  const existingSegs = segments.filter((s) => s.category !== 'proposed');
+  const counts = existingSegs.reduce(
     (acc, seg) => {
       acc[seg.condition] = (acc[seg.condition] || 0) + 1;
       return acc;

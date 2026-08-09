@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useGpxParser } from '@/hooks/use-gpx-parser';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { CreateSegmentInput } from '@/services/segments/create-segment';
-import { FileUp, FileCheck, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { FileUp, FileCheck, AlertCircle, Loader2 } from 'lucide-react';
 
 interface GpxImporterProps {
   onSuccess: (input: CreateSegmentInput) => void;
@@ -16,6 +16,7 @@ interface GpxImporterProps {
 export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
   const { parseGpx, parsing, error: parseError } = useGpxParser();
   const [parsedData, setParsedData] = useState<any | null>(null);
+  const [category, setCategory] = useState<'existing' | 'proposed'>('existing');
   const [material, setMaterial] = useState<'pasangan_batu' | 'beton_precast' | 'tanah' | 'belum_ada' | 'lainnya'>('pasangan_batu');
   const [condition, setCondition] = useState<'baik' | 'rusak_ringan' | 'rusak_berat' | 'tersumbat'>('baik');
   const [widthCm, setWidthCm] = useState('50');
@@ -28,7 +29,7 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
       const data = await parseGpx(file);
       setParsedData(data);
     } catch (err) {
-      console.error('Failed to parse GPX', err);
+      console.error('Failed to parse GPX/KML', err);
     }
   };
 
@@ -38,6 +39,7 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
       name: parsedData.name,
       material,
       condition,
+      category,
       length_m: parsedData.lengthM,
       width_cm: parseFloat(widthCm),
       depth_cm: parseFloat(depthCm),
@@ -52,14 +54,14 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
   };
 
   return (
-    <div className="space-y-4 max-w-lg bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+    <div className="space-y-4 max-w-lg bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
       <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-slate-50/50 transition-colors relative">
         <input type="file" accept=".gpx,.kml" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" disabled={parsing} />
         {parsedData ? (
           <>
             <FileCheck className="h-10 w-10 text-emerald-500 mb-2" />
             <p className="text-sm font-semibold text-slate-800">{parsedData.name}</p>
-            <p className="text-xs text-slate-400 mt-1">Panjang jalur GPS: {parsedData.lengthM} meter</p>
+            <p className="text-xs text-slate-400 mt-1">Jalur terdeteksi: {parsedData.lengthM} meter</p>
           </>
         ) : (
           <>
@@ -78,29 +80,32 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
 
       {parsedData && (
         <div className="space-y-4 pt-2 border-t">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-2">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-500 mb-1">Material</label>
+              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Kategori</label>
+              <Select value={category} onValueChange={(val: any) => setCategory(val)}>
+                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent><SelectItem value="existing">Eksisting</SelectItem><SelectItem value="proposed">Rencana</SelectItem></SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Material</label>
               <Select value={material} onValueChange={(val: any) => setMaterial(val)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="pasangan_batu">Batu Kali</SelectItem>
-                  <SelectItem value="beton_precast">Beton Precast</SelectItem>
-                  <SelectItem value="tanah">Tanah</SelectItem>
-                  <SelectItem value="belum_ada">Belum Ada Drainase</SelectItem>
+                  <SelectItem value="pasangan_batu">Batu Kali</SelectItem><SelectItem value="beton_precast">Precast</SelectItem>
+                  <SelectItem value="tanah">Tanah</SelectItem><SelectItem value="belum_ada">Belum Ada</SelectItem>
                   <SelectItem value="lainnya">Lainnya</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <label className="block text-[11px] font-semibold text-slate-500 mb-1">Kondisi</label>
+              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Kondisi</label>
               <Select value={condition} onValueChange={(val: any) => setCondition(val)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="baik">Baik</SelectItem>
-                  <SelectItem value="rusak_ringan">Rusak Ringan</SelectItem>
-                  <SelectItem value="rusak_berat">Rusak Berat</SelectItem>
-                  <SelectItem value="tersumbat">Tersumbat</SelectItem>
+                  <SelectItem value="baik">Baik</SelectItem><SelectItem value="rusak_ringan">R. Ringan</SelectItem>
+                  <SelectItem value="rusak_berat">R. Berat</SelectItem><SelectItem value="tersumbat">Tersumbat</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -108,16 +113,16 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-500 mb-1">Lebar Drainase (cm)</label>
-              <Input type="number" value={widthCm} onChange={(e) => setWidthCm(e.target.value)} required />
+              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Lebar Saluran (cm)</label>
+              <Input type="number" value={widthCm} onChange={(e) => setWidthCm(e.target.value)} className="h-8 text-xs" required />
             </div>
             <div>
-              <label className="block text-[11px] font-semibold text-slate-500 mb-1">Kedalaman (cm)</label>
-              <Input type="number" value={depthCm} onChange={(e) => setDepthCm(e.target.value)} required />
+              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Kedalaman (cm)</label>
+              <Input type="number" value={depthCm} onChange={(e) => setDepthCm(e.target.value)} className="h-8 text-xs" required />
             </div>
           </div>
 
-          <Button type="button" onClick={handleImport} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white">
+          <Button onClick={handleImport} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white h-9 text-xs">
             Impor Segmen Koordinat
           </Button>
         </div>

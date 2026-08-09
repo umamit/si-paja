@@ -17,6 +17,9 @@ const defaultSegments: DrainageSegment[] = [
     material: 'beton_precast',
     condition: 'baik',
     description: 'Kondisi beton precast rapi, aliran lancar.',
+    start_elevation_m: 12,
+    end_elevation_m: 10,
+    category: 'existing',
     gps_source: 'manual_input',
     created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
   },
@@ -33,6 +36,9 @@ const defaultSegments: DrainageSegment[] = [
     material: 'pasangan_batu',
     condition: 'tersumbat',
     description: 'Sumbatan sedimen pasir dan sampah plastik di persimpangan jalan.',
+    start_elevation_m: 10,
+    end_elevation_m: 8,
+    category: 'existing',
     gps_source: 'manual_input',
     created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
   },
@@ -49,8 +55,30 @@ const defaultSegments: DrainageSegment[] = [
     material: 'tanah',
     condition: 'rusak_berat',
     description: 'Saluran tanah mengalami erosi tebing dinding, perlu turap batu kali.',
+    start_elevation_m: 8,
+    end_elevation_m: 5,
+    category: 'existing',
     gps_source: 'manual_input',
     created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
+  },
+  {
+    id: 'seed-4',
+    name: 'Rencana Saluran Lingkar Taliabu Baru (Masterplan)',
+    start_lat: -1.8770,
+    start_lng: 124.4790,
+    end_lat: -1.8785,
+    end_lng: 124.4800,
+    length_m: 200,
+    width_cm: 100,
+    depth_cm: 120,
+    material: 'beton_precast',
+    condition: 'baik',
+    description: 'Usulan saluran pembuangan utama untuk mengurangi beban genangan Jl. Gajah Mada.',
+    start_elevation_m: 15,
+    end_elevation_m: 12,
+    category: 'proposed',
+    gps_source: 'manual_input',
+    created_at: new Date().toISOString(),
   },
 ];
 
@@ -79,4 +107,4 @@ export async function getSegments(): Promise<DrainageSegment[]> {
 
   return data || [];
 }
-
+export default getSegments;
