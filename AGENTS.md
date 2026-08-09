@@ -58,3 +58,13 @@ Sebelum menjalankan aplikasi, pastikan tabel-tabel berikut sudah diatur di proye
 2. **drainage_segments**: Menyimpan data koordinat awal-akhir, dimensi drainase (panjang, lebar, dalam), material, foto, dan status kondisi fisik.
 
 *Skema lengkap SQL migrasi dapat ditemukan di file [supabase_schema.sql](file:///Users/husnitausman/Documents/antigravity/PUPR-SDA/supabase_schema.sql).*
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
