@@ -8,23 +8,7 @@ export async function getLogs(segmentId: string): Promise<MaintenanceLog[]> {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('pupr_logs');
       const logs: MaintenanceLog[] = stored ? JSON.parse(stored) : [];
-      const segmentLogs = logs.filter((log) => log.segment_id === segmentId);
-      
-      if (segmentLogs.length === 0) {
-        // Seed default log for new segment view
-        const defaultLog: MaintenanceLog = {
-          id: `seed-log-${segmentId}`,
-          segment_id: segmentId,
-          action_type: 'inspeksi',
-          description: 'Inspeksi awal kondisi fisik oleh petugas lapangan.',
-          operator_name: 'Surveyor PUPR',
-          created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
-        };
-        logs.push(defaultLog);
-        localStorage.setItem('pupr_logs', JSON.stringify(logs));
-        return [defaultLog];
-      }
-      
+      const segmentLogs = logs.filter((log) => log.segment_id === segmentId && !log.id.startsWith('seed-'));
       return segmentLogs.sort((a, b) => b.created_at.localeCompare(a.created_at));
     }
     return [];
@@ -43,3 +27,4 @@ export async function getLogs(segmentId: string): Promise<MaintenanceLog[]> {
 
   return data || [];
 }
+export default getLogs;

@@ -3,38 +3,17 @@ import { PublicComplaint } from '@/types';
 
 const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
 
-const defaultComplaints: PublicComplaint[] = [
-  {
-    id: 'complaint-seed-1',
-    reporter_name: 'Budi Santoso',
-    reporter_contact: '08123456789',
-    location_desc: 'Dekat pertigaan pasar utama Bobong',
-    issue_desc: 'Tumpukan sampah pasar menghalangi aliran air, jika hujan deras air meluap ke badan jalan setinggi 20cm.',
-    status: 'menunggu',
-    created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-  },
-  {
-    id: 'complaint-seed-2',
-    reporter_name: 'Siti Rahma',
-    reporter_contact: '08234567890',
-    location_desc: 'Depan warung makan daerah pelabuhan',
-    issue_desc: 'Dinding beton pembatas drainase amblas runtuh sepanjang 5 meter, menyumbat aliran air.',
-    status: 'ditinjau',
-    created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
-  },
-];
-
 export async function getComplaints(): Promise<PublicComplaint[]> {
   if (isPlaceholder) {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('pupr_complaints');
       if (stored) {
-        return JSON.parse(stored);
+        return JSON.parse(stored).filter((c: any) => !c.id.startsWith('complaint-seed-'));
       }
-      localStorage.setItem('pupr_complaints', JSON.stringify(defaultComplaints));
-      return defaultComplaints;
+      localStorage.setItem('pupr_complaints', JSON.stringify([]));
+      return [];
     }
-    return defaultComplaints;
+    return [];
   }
 
   const { data, error } = await supabase
@@ -49,3 +28,4 @@ export async function getComplaints(): Promise<PublicComplaint[]> {
 
   return data || [];
 }
+export default getComplaints;

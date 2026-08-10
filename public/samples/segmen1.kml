@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document id="KmlFile">
+	<gx:CascadingStyle kml:id="__managed_style_0BBBA38C0A411EB829DC_highlight">
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>3</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_0BBBA38C0A411EB829DC_normal">
+		<styleUrl>https://earth.google.com/balloon_components/base/1.1.0.0/card_template.kml#main</styleUrl>
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>2</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_0BBBA38C0A411EB829DC">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_0BBBA38C0A411EB829DC_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_0BBBA38C0A411EB829DC_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Placemark id="05401D93BC411EB829C0">
+		<name>saluran fangahu depan family karaoke</name>
+		<LookAt>
+			<longitude>124.3779728268296</longitude>
+			<latitude>-1.938195623983279</latitude>
+			<altitude>9.189237124507017</altitude>
+			<heading>3.112726217788157</heading>
+			<tilt>0.1988157882930756</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>228.3417687005567</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0BBBA38C0A411EB829DC</styleUrl>
+		<LineString>
+			<coordinates>
+				124.3793256984954,-1.940347777225057,0 124.3792532510045,-1.940246932763146,0 124.3791819170063,-1.94014541313546,0 124.3790531148367,-1.939954855756483,0 124.3789245759984,-1.939758196429398,0 124.3787871369333,-1.939557761469396,0 124.37863233348,-1.939307862458871,0 124.3785299028751,-1.93913465371174,0 124.3784200747848,-1.938921999755752,0 124.3783181825073,-1.938732953555687,0 124.3781984403128,-1.938529598579869,0 124.3781173596117,-1.938401579292186,0 124.378016246007,-1.938251905270119,0 124.3779394007327,-1.938151140184609,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+</Document>
+</kml>
