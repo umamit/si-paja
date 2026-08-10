@@ -3,14 +3,16 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Map, ListPlus, LogOut, MessageSquare, ChevronLeft, ChevronRight, HelpCircle, Settings } from 'lucide-react';
+import { LayoutDashboard, Map, ListPlus, LogOut, MessageSquare, ChevronLeft, ChevronRight, HelpCircle, Settings, Info } from 'lucide-react';
 import { signOut } from '@/services/auth/sign-out';
 import { Button } from '@/components/ui/button';
+import { AboutDialog } from './about-dialog';
 
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -92,11 +94,22 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="p-3 border-t border-slate-800">
+      <div className="p-3 border-t border-slate-800 space-y-1">
+        <button
+          onClick={() => setIsAboutOpen(true)}
+          title="Tentang SI-PAJA"
+          className={`flex items-center rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/40 transition-all duration-200 ${
+            isCollapsed ? 'justify-center p-2.5 w-full' : 'space-x-3 px-4 py-3 w-full'
+          }`}
+        >
+          <Info className="h-5 w-5 shrink-0 text-amber-500" />
+          {!isCollapsed && <span>Tentang SI-PAJA</span>}
+        </button>
+
         <button
           onClick={handleLogout}
           title="Keluar Aplikasi"
-          className={`flex items-center rounded-lg text-sm font-medium text-slate-450 hover:text-rose-400 hover:bg-rose-950/20 transition-all duration-200 ${
+          className={`flex items-center rounded-lg text-sm font-medium text-slate-455 hover:text-rose-450 hover:bg-rose-950/20 transition-all duration-200 ${
             isCollapsed ? 'justify-center p-2.5 w-full' : 'space-x-3 px-4 py-3 w-full'
           }`}
         >
@@ -104,6 +117,8 @@ export function Sidebar() {
           {!isCollapsed && <span>Keluar</span>}
         </button>
       </div>
+
+      <AboutDialog open={isAboutOpen} onOpenChange={setIsAboutOpen} />
     </aside>
   );
 }
