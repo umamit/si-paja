@@ -87,7 +87,7 @@ export function MapCore({ segments }: MapCoreProps) {
           const dashArray = isProposed ? '5, 8' : (isMissing ? '8, 8' : undefined);
 
           return (
-            <Polyline key={seg.id} positions={positions} pathOptions={{ color, weight: 6, opacity: 0.8, dashArray }}>
+            <Polyline key={seg.id} positions={positions} pathOptions={{ color, weight: 3.5, opacity: 0.8, dashArray }}>
               <Popup>
                 <div className="p-1 space-y-2 max-w-xs">
                   <h4 className="font-bold text-slate-900 border-b pb-1 text-sm">{seg.name}</h4>
