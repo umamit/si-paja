@@ -115,15 +115,26 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
         <div className="text-[11px] pt-1">
           {isSafe ? (
             <div className="flex items-start gap-1.5 p-2 bg-emerald-50 text-emerald-800 rounded border border-emerald-100">
-              <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-              <p>Penampang aman. Tinggi jagaan <strong>({freeboard.toFixed(2)}m)</strong> mencukupi untuk mencegah luapan.</p>
+              <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" /><p>Aman. Tinggi jagaan <strong>({freeboard.toFixed(2)}m)</strong> mencukupi.</p>
             </div>
           ) : (
             <div className="flex items-start gap-1.5 p-2 bg-rose-50 text-rose-800 rounded border border-rose-100">
-              <AlertTriangle className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" />
-              <p>Kapasitas terlampaui. Luapan setinggi <strong>{Math.abs(H-h).toFixed(2)}m</strong> di atas bibir saluran!</p>
+              <AlertTriangle className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" /><p>Rawan. Luapan setinggi <strong>{Math.abs(H-h).toFixed(2)}m</strong> di atas bibir parit!</p>
             </div>
           )}
+        </div>
+
+        {/* Visual Sketsa Penampang Basah */}
+        <div className="flex flex-col items-center justify-center p-2.5 bg-white rounded-lg border border-slate-100 mt-2 text-slate-800">
+          <p className="text-[8px] uppercase font-bold text-slate-400 mb-1.5">Sketsa Dimensi Penampang Parit</p>
+          <div className="relative w-36 h-20 border-b-4 border-x-4 border-slate-600 bg-slate-100/50 flex items-end overflow-hidden rounded-b-md">
+            <div className="w-full bg-blue-500/35 border-t-2 border-blue-500 transition-all duration-300 flex items-center justify-center text-[8px] text-blue-900 font-extrabold" style={{ height: `${Math.min((h / H) * 100, 100)}%` }}>
+              {h > 0 && `h: ${h.toFixed(2)}m`}
+            </div>
+            <div className="absolute left-1.5 top-1 text-[8px] text-slate-400 font-bold">H: {H.toFixed(2)}m</div>
+            <div className="absolute right-1.5 top-1 text-[8px] text-slate-500 font-bold bg-amber-50 px-1 rounded border border-amber-200">Jagaan: {freeboard.toFixed(2)}m</div>
+          </div>
+          <div className="w-36 text-center text-[8px] text-slate-400 font-bold mt-1">Lebar (B): {B.toFixed(2)}m</div>
         </div>
       </CardContent>
     </Card>
