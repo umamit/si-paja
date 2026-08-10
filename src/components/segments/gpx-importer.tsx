@@ -113,27 +113,31 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Lebar Saluran (cm)</label>
-              <Input type="number" value={widthCm} onChange={(e) => setWidthCm(e.target.value)} className="h-8 text-xs" required />
+              <label className="block text-[10px] font-bold text-slate-500 mb-1">Lebar (B) (cm)</label>
+              <Input type="number" value={widthCm} onChange={(e) => setWidthCm(e.target.value)} className="h-8 text-xs bg-slate-50/35" required />
             </div>
             <div>
-              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Kedalaman (cm)</label>
-              <Input type="number" value={depthCm} onChange={(e) => setDepthCm(e.target.value)} className="h-8 text-xs" required />
+              <label className="block text-[10px] font-bold text-slate-500 mb-1">Tinggi (H) (cm)</label>
+              <Input type="number" value={depthCm} onChange={(e) => setDepthCm(e.target.value)} className="h-8 text-xs bg-slate-50/35" required />
             </div>
           </div>
 
-          <Button onClick={handleImport} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white h-9 text-xs">
+          <Button onClick={handleImport} className="w-full bg-[#003366] hover:bg-[#002244] text-white font-bold h-9 text-xs rounded-xl shadow-md transition-all duration-200">
             Impor Segmen Koordinat
           </Button>
         </div>
       )}
       {/* Download Sample Files for easy testing */}
-      <div className="flex items-center justify-between text-[10px] text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100">
-        <span>Belum punya file koordinat?</span>
-        <div className="flex gap-2 font-bold">
-          <a href="/samples/sample.gpx" download className="text-[#003366] hover:underline">Unduh GPX (.gpx)</a>
-          <span className="text-slate-350">&bull;</span>
-          <a href="/samples/sample.kml" download className="text-[#003366] hover:underline">Unduh KML (.kml)</a>
+      <div className="flex flex-col gap-1.5 text-[9px] text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+        <div className="flex items-center justify-between">
+          <span className="font-medium">Berkas Contoh:</span>
+          <div className="flex gap-2.5 font-bold">
+            <a href="/samples/segmen1.kml" download className="text-[#003366] hover:underline">Segmen 1 Taliabu (.kml)</a>
+            <span className="text-slate-300">&bull;</span>
+            <a href="/samples/sample.gpx" download className="text-[#003366] hover:underline">Sample GPX</a>
+            <span className="text-slate-300">&bull;</span>
+            <a href="/samples/sample.kml" download className="text-[#003366] hover:underline">Sample KML</a>
+          </div>
         </div>
       </div>
     </div>
