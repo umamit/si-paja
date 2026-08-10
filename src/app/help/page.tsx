@@ -73,6 +73,22 @@ export default function HelpPage() {
               </ul>
             </div>
           </Card>
+          {/* Guide Card 5 */}
+          <Card className="p-6 bg-white shadow-sm border border-slate-100 space-y-4">
+            <div className="flex items-center space-x-3 text-slate-900 font-bold">
+              <div className="p-2 rounded-lg bg-amber-50 text-amber-700"><BookOpen className="h-5 w-5" /></div>
+              <h3>Perencanaan Saluran & Rekayasa Dimensi</h3>
+            </div>
+            <div className="text-xs text-slate-650 space-y-2 leading-relaxed">
+              <p>Prosedur evaluasi & pengusulan dimensi penampang saluran baru:</p>
+              <ul className="list-disc pl-4 space-y-1.5">
+                <li><strong>Identifikasi Masalah</strong>: Jika parit eksisting berstatus <strong>🔴 Rawan Meluap</strong>, catat sisa kapasitas penampangnya.</li>
+                <li><strong>Simulasi Dimensi Rencana</strong>: Buka form pendaftaran, pilih mode <strong>Perbarui</strong>, pilih saluran, lalu ubah kategori menjadi <strong>Rencana (Proposed)</strong>.</li>
+                <li><strong>Modifikasi Penampang</strong>: Naikkan nilai Lebar (B) atau Tinggi (H) secara bertahap pada form, lalu klik simpan.</li>
+                <li><strong>Verifikasi Struktur</strong>: Pastikan indikator berubah menjadi <strong>🟢 Kapasitas Aman</strong> (tinggi jagaan &gt; 10 cm) pada sketsa dinamis sebelum diajukan ke anggaran RAB Masterplan APBD.</li>
+              </ul>
+            </div>
+          </Card>
         </div>
       </div>
     </AppLayout>
