@@ -6,6 +6,7 @@ import { getProfile } from '@/services/auth/get-profile';
 import { getSegments } from '@/services/segments/get-segments';
 import { deleteSegment } from '@/services/segments/delete-segment';
 import { createSegment, CreateSegmentInput } from '@/services/segments/create-segment';
+import { updateSegment } from '@/services/segments/update-segment';
 import { DrainageSegment, Profile } from '@/types';
 import { AppLayout } from '@/components/shared/layout';
 import { SegmentTable } from '@/components/segments/segment-table';
@@ -70,12 +71,16 @@ function SegmentsContent() {
       .finally(() => setLoading(false));
   }, [router]);
 
-  const handleAddSegment = async (input: CreateSegmentInput) => {
+  const handleAddSegment = async (input: CreateSegmentInput, updateId?: string) => {
     try {
       if (prefilledDesc) {
         input.description = `${input.description || ''} (Rujukan aduan warga: ${prefilledDesc})`.trim();
       }
-      await createSegment(input);
+      if (updateId) {
+        await updateSegment(updateId, input);
+      } else {
+        await createSegment(input);
+      }
       setDialogOpen(false);
       fetchSegments();
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
@@ -116,10 +121,10 @@ function SegmentsContent() {
                     <TabsTrigger value="gpx" className="rounded-md flex items-center justify-center gap-1.5 text-xs font-semibold"><Upload className="h-3.5 w-3.5" />Impor GPX / KML</TabsTrigger>
                   </TabsList>
                   <TabsContent value="manual" className="mt-3">
-                    <SurveyForm onSuccess={handleAddSegment} surveyorId={profile?.id} />
+                    <SurveyForm onSuccess={handleAddSegment} surveyorId={profile?.id} segments={segments} />
                   </TabsContent>
                   <TabsContent value="gpx" className="mt-3">
-                    <GpxImporter onSuccess={handleAddSegment} surveyorId={profile?.id} />
+                    <GpxImporter onSuccess={handleAddSegment} surveyorId={profile?.id} segments={segments} />
                   </TabsContent>
                 </Tabs>
               </DialogContent>
