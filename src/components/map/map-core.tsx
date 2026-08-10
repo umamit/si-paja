@@ -86,21 +86,42 @@ export function MapCore({ segments }: MapCoreProps) {
           const color = isProposed ? '#a855f7' : (isMissing ? '#ef4444' : (conditionColors[seg.condition] || '#64748b'));
           const dashArray = isProposed ? '5, 8' : (isMissing ? '8, 8' : undefined);
 
+          // Klasifikasi berdasarkan dimensi lebar saluran (width_cm)
+          // Primer: >= 150 cm | Sekunder: 50 - 149 cm | Tersier: < 50 cm
+          const getDrainageType = (w: number) => {
+            if (w >= 150) return 'Primer';
+            if (w >= 50) return 'Sekunder';
+            return 'Tersier';
+          };
+          
+          const getLineWeight = (w: number) => {
+            if (w >= 150) return 6.0; // Tebal untuk Primer
+            if (w >= 50) return 4.0;  // Sedang untuk Sekunder
+            return 2.5;               // Tipis untuk Tersier
+          };
+
+          const typeLabel = getDrainageType(seg.width_cm);
+          const weight = getLineWeight(seg.width_cm);
+
           return (
-            <Polyline key={seg.id} positions={positions} pathOptions={{ color, weight: 3.5, opacity: 0.8, dashArray }}>
+            <Polyline key={seg.id} positions={positions} pathOptions={{ color, weight, opacity: 0.8, dashArray }}>
               <Popup>
                 <div className="p-1 space-y-2 max-w-xs">
                   <h4 className="font-bold text-slate-900 border-b pb-1 text-sm">{seg.name}</h4>
-                  <div className="flex gap-2">
-                    <Badge className="text-[10px] text-white" style={{ backgroundColor: color }}>
-                      {isProposed ? 'Proposed/Rencana' : conditionLabels[seg.condition]}
+                  <div className="flex flex-wrap gap-1.5">
+                    <Badge className="text-[10px] text-white font-semibold" style={{ backgroundColor: color }}>
+                      {isProposed ? 'Rencana' : conditionLabels[seg.condition]}
+                    </Badge>
+                    <Badge variant="secondary" className="text-[10px] font-bold text-slate-700 bg-slate-100 border border-slate-200">
+                      {typeLabel}
                     </Badge>
                     <Badge variant="outline" className="text-[10px] capitalize">
                       {seg.material.replace('_', ' ')}
                     </Badge>
                   </div>
-                  <div className="text-[11px] text-slate-650">
-                    <p><strong>Panjang:</strong> {seg.length_m} m | <strong>Kemiringan:</strong> {Math.abs((seg.start_elevation_m || 0) - (seg.end_elevation_m || 0))} m</p>
+                  <div className="text-[11px] text-slate-650 space-y-0.5">
+                    <p><strong>Dimensi:</strong> L {seg.width_cm} cm | D {seg.depth_cm} cm</p>
+                    <p><strong>Panjang:</strong> {seg.length_m} m | <strong>Elevasi:</strong> {Math.abs((seg.start_elevation_m || 0) - (seg.end_elevation_m || 0))} m</p>
                   </div>
                 </div>
               </Popup>
