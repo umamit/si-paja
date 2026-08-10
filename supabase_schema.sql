@@ -102,4 +102,26 @@ create policy "Public complaints can be updated by authenticated users" on publi
 -- INSERT INTO public.profiles (id, full_name, role) 
 -- VALUES ('76aab6be-9cc3-4780-954a-216b4ec62a6f', 'Anhar (Administrator)', 'admin');
 
+-- 6. Konfigurasi Supabase Storage (Penyimpanan Foto Parit)
+-- Jalankan query ini untuk membuat bucket 'drainage-photos' dan kebijakan aksesnya:
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('drainage-photos', 'drainage-photos', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Kebijakan akses agar semua foto bisa dilihat publik (Public Read)
+CREATE POLICY "Foto parit dapat dilihat publik" 
+ON storage.objects FOR SELECT 
+USING (bucket_id = 'drainage-photos');
+
+-- Kebijakan agar surveyor/admin yang login bisa mengunggah foto (Authenticated Insert/Update)
+CREATE POLICY "Surveyor terotentikasi dapat mengunggah foto" 
+ON storage.objects FOR INSERT 
+TO authenticated 
+WITH CHECK (bucket_id = 'drainage-photos');
+
+CREATE POLICY "Surveyor terotentikasi dapat memperbarui foto" 
+ON storage.objects FOR UPDATE 
+TO authenticated 
+USING (bucket_id = 'drainage-photos');
+
 
