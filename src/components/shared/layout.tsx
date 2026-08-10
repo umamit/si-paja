@@ -12,7 +12,7 @@ export function AppLayout({ children }: LayoutProps) {
       <Sidebar />
       <div className="flex-1 flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow p-8 max-w-7xl mx-auto w-full">
+        <main className="flex-grow p-4 md:p-8 max-w-7xl mx-auto w-full">
           {children}
         </main>
       </div>

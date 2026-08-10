@@ -17,7 +17,17 @@ export function Sidebar() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('sidebar_collapsed');
-      if (stored) setIsCollapsed(JSON.parse(stored));
+      if (stored) {
+        setIsCollapsed(JSON.parse(stored));
+      } else {
+        setIsCollapsed(window.innerWidth < 768);
+      }
+
+      const handleResize = () => {
+        if (window.innerWidth < 768) setIsCollapsed(true);
+      };
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
     }
   }, []);
 
