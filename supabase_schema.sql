@@ -97,3 +97,9 @@ create policy "Public complaints can be created by anyone" on public_complaints
 create policy "Public complaints can be updated by authenticated users" on public_complaints
   for update to authenticated using (true);
 
+-- 5. Kredensial & SQL Seed Profile Awal (Referensi Pengembang)
+-- Jalankan query di bawah ini di Supabase SQL Editor setelah membuat user di Auth:
+-- INSERT INTO public.profiles (id, full_name, role) 
+-- VALUES ('76aab6be-9cc3-4780-954a-216b4ec62a6f', 'Anhar (Administrator)', 'admin');
+
+
