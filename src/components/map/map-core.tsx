@@ -1,5 +1,4 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Polyline, Popup, Marker, Circle } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
@@ -17,38 +16,21 @@ const fixLeafletIcon = () => {
   });
 };
 
-interface MapCoreProps {
-  segments: DrainageSegment[];
-}
-
-const floodHotspots = [
-  { center: [-1.9455, 124.3770] as [number, number], radius: 140, desc: 'Hotspot Genangan Jl. Sultan Hasanuddin' },
-  { center: [-1.9475, 124.3800] as [number, number], radius: 100, desc: 'Hotspot Genangan Area Pelabuhan Bobong' },
-];
+interface MapCoreProps { segments: DrainageSegment[]; }
 
 export function MapCore({ segments }: MapCoreProps) {
   const [showHotspots, setShowHotspots] = useState(false);
+  const [rainIntensity, setRainIntensity] = useState(110);
 
   useEffect(() => {
     fixLeafletIcon();
+    if (typeof window !== 'undefined') setRainIntensity(Number(localStorage.getItem('pupr_rain_intensity')) || 110);
   }, []);
 
   const centerLat = -1.9450;
   const centerLng = 124.3790;
-
-  const conditionColors: Record<string, string> = {
-    baik: '#10b981',
-    rusak_ringan: '#f59e0b',
-    rusak_berat: '#ef4444',
-    tersumbat: '#f97316',
-  };
-
-  const conditionLabels: Record<string, string> = {
-    baik: 'Baik',
-    rusak_ringan: 'Rusak Ringan',
-    rusak_berat: 'Rusak Berat',
-    tersumbat: 'Tersumbat',
-  };
+  const conditionColors: Record<string, string> = { baik: '#10b981', rusak_ringan: '#f59e0b', rusak_berat: '#ef4444', tersumbat: '#f97316' };
+  const conditionLabels: Record<string, string> = { baik: 'Baik', rusak_ringan: 'Rusak Ringan', rusak_berat: 'Rusak Berat', tersumbat: 'Tersumbat' };
 
   return (
     <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 shadow-inner relative">
@@ -65,39 +47,60 @@ export function MapCore({ segments }: MapCoreProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {showHotspots && floodHotspots.map((h, i) => (
-          <Circle
-            key={i}
-            center={h.center}
-            radius={h.radius}
-            pathOptions={{ color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.25, weight: 1.5 }}
-          >
-            <Popup><span className="font-bold text-xs text-rose-800">{h.desc}</span></Popup>
-          </Circle>
-        ))}
+        {showHotspots && segments.map((seg) => {
+          const elevStart = seg.start_elevation_m ?? 0, elevEnd = seg.end_elevation_m ?? 0, dElev = elevStart - elevEnd;
+          const slope = seg.length_m > 0 ? (Math.abs(dElev) / seg.length_m) * 100 : 0;
+          const C = { beton_precast: 0.85, pasangan_batu: 0.75, tanah: 0.50, belum_ada: 0.90, lainnya: 0.70 }[seg.material] || 0.7;
+          const Q_r = 0.278 * C * rainIntensity * ((seg.length_m * 15) / 1000000), Q_m = 0.85 * ((seg.width_cm / 100) * (seg.depth_cm / 100));
+          
+          const reasons = [
+            (seg.condition === 'tersumbat' || seg.condition === 'rusak_berat') && (seg.condition === 'tersumbat' ? 'Saluran Tersumbat' : 'Kerusakan Fisik Berat'),
+            Q_r > Q_m && 'Debit Limpasan Melebihi Kapasitas (Luapan)',
+            dElev < 0 && 'Aliran Terbalik (Mendaki)',
+            slope < 0.1 && seg.length_m > 0 && 'Kemiringan Kritis / Sangat Datar (<0.1%)'
+          ].filter(Boolean) as string[];
+
+          if (reasons.length === 0) return null;
+
+          return (
+            <Circle
+              key={`hotspot-${seg.id}`}
+              center={[(seg.start_lat + seg.end_lat) / 2, (seg.start_lng + seg.end_lng) / 2]}
+              radius={Math.max(seg.length_m / 2, 40)}
+              pathOptions={{ color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.2, weight: 1.5 }}
+            >
+              <Popup>
+                <div className="p-1 space-y-1.5 max-w-xs text-xs text-slate-850">
+                  <h4 className="font-bold text-rose-800 border-b pb-1">⚠️ ZONA RAWAN BANJIR</h4>
+                  <p className="font-semibold text-slate-900">{seg.name}</p>
+                  <div className="space-y-1 text-[10px]">
+                    <p className="font-bold text-slate-550 uppercase">Penyebab:</p>
+                    <ul className="list-disc pl-3.5 space-y-0.5 text-rose-700 font-semibold leading-normal">
+                      {reasons.map((r, i) => <li key={i}>{r}</li>)}
+                    </ul>
+                  </div>
+                </div>
+              </Popup>
+            </Circle>
+          );
+        })}
 
         {segments.map((seg) => {
-          const positions: [number, number][] = [
-            [seg.start_lat, seg.start_lng],
-            [seg.end_lat, seg.end_lng],
-          ];
+          const positions: [number, number][] = [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
           const isProposed = seg.category === 'proposed';
           const isMissing = seg.material === 'belum_ada';
           const color = isProposed ? '#a855f7' : (isMissing ? '#ef4444' : (conditionColors[seg.condition] || '#64748b'));
           const dashArray = isProposed ? '5, 8' : (isMissing ? '8, 8' : undefined);
 
-          // Klasifikasi berdasarkan dimensi lebar saluran (width_cm)
-          // Primer: >= 150 cm | Sekunder: 50 - 149 cm | Tersier: < 50 cm
           const getDrainageType = (w: number) => {
             if (w >= 150) return 'Primer';
             if (w >= 50) return 'Sekunder';
             return 'Tersier';
           };
-          
           const getLineWeight = (w: number) => {
-            if (w >= 150) return 6.0; // Tebal untuk Primer
-            if (w >= 50) return 4.0;  // Sedang untuk Sekunder
-            return 2.5;               // Tipis untuk Tersier
+            if (w >= 150) return 6.0;
+            if (w >= 50) return 4.0;
+            return 2.5;
           };
 
           const typeLabel = getDrainageType(seg.width_cm);
@@ -106,7 +109,7 @@ export function MapCore({ segments }: MapCoreProps) {
           return (
             <Polyline key={seg.id} positions={positions} pathOptions={{ color, weight, opacity: 0.8, dashArray }}>
               <Popup>
-                <div className="p-1 space-y-2 max-w-xs">
+                <div className="p-1 space-y-2 max-w-xs animate-fade-in">
                   <h4 className="font-bold text-slate-900 border-b pb-1 text-sm">{seg.name}</h4>
                   <div className="flex flex-wrap gap-1.5">
                     <Badge className="text-[10px] text-white font-semibold" style={{ backgroundColor: color }}>
@@ -129,7 +132,6 @@ export function MapCore({ segments }: MapCoreProps) {
           );
         })}
 
-        {/* Group markers into clusters for clean map visualization */}
         <MarkerClusterGroup>
           {segments.map((seg) => (
             <Marker key={`marker-${seg.id}`} position={[seg.start_lat, seg.start_lng]} />
