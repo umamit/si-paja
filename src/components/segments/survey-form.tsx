@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { CreateSegmentInput } from '@/services/segments/create-segment';
 import { Button } from '@/components/ui/button';
@@ -8,11 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { supabase } from '@/lib/supabase/client';
 import { Loader2, Navigation, FileImage } from 'lucide-react';
 import { DrainageSegment } from '@/types';
-
-interface SurveyFormProps { onSuccess: (input: CreateSegmentInput, updateId?: string) => void; surveyorId?: string; segments?: DrainageSegment[]; }
 const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
-
-export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormProps) {
+export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess: (input: CreateSegmentInput, updateId?: string) => void; surveyorId?: string; segments?: DrainageSegment[]; }) {
   const [mode, setMode] = useState<'create' | 'update'>('create');
   const [selectedId, setSelectedId] = useState('');
   const [form, setForm] = useState({ name: '', category: 'existing' as any, material: 'pasangan_batu' as any, condition: 'baik' as any, lengthM: '', widthCm: '', depthCm: '' });
@@ -27,13 +23,11 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormP
     setForm({ name: s.name, category: s.category || 'existing', material: s.material, condition: s.condition, lengthM: String(s.length_m), widthCm: String(s.width_cm), depthCm: String(s.depth_cm) });
     setCoords({ startLat: String(s.start_lat || ''), startLng: String(s.start_lng || ''), endLat: String(s.end_lat || ''), endLng: String(s.end_lng || '') });
   };
-
   const getDeviceLocation = (type: 'start' | 'end') => {
     navigator.geolocation?.getCurrentPosition((pos) => {
       setCoords((prev) => ({ ...prev, [type === 'start' ? 'startLat' : 'endLat']: pos.coords.latitude.toFixed(6), [type === 'start' ? 'startLng' : 'endLng']: pos.coords.longitude.toFixed(6) }));
     });
   };
-
   const handlePhotoUpload = async (file: File) => {
     if (isPlaceholder) return URL.createObjectURL(file);
     const path = `segments/${Date.now()}.${file.name.split('.').pop()}`;
@@ -41,7 +35,6 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormP
     if (error) throw error;
     return supabase.storage.from('drainage-photos').getPublicUrl(path).data.publicUrl;
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -60,7 +53,7 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormP
   const wVal = parseFloat(form.widthCm);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3.5 max-w-lg bg-white p-4.5 rounded-xl border border-slate-100 shadow-sm text-slate-800 text-xs">
+    <form onSubmit={handleSubmit} className="space-y-3 max-w-lg bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-slate-800 text-xs">
       <div className="grid grid-cols-2 gap-3 bg-slate-50/50 p-2 rounded-lg border border-slate-150">
         <div>
           <label className="text-[9px] font-bold text-slate-500 uppercase">Mode Form</label>
@@ -111,18 +104,16 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormP
         ))}
       </div>
 
-      {form.widthCm && !isNaN(wVal) && (
-        <div className="flex items-center justify-between px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200/60">
-          <span className="text-[9px] text-slate-500 font-bold uppercase">Klasifikasi Otomatis</span>
-          <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
-            wVal >= 150 ? 'text-rose-600 bg-rose-50 border-rose-200' :
-            wVal >= 50 ? 'text-amber-600 bg-amber-50 border-amber-250' :
-            'text-emerald-600 bg-emerald-50 border-emerald-200'
-          }`}>
-            {wVal >= 150 ? 'Primer' : wVal >= 50 ? 'Sekunder' : 'Tersier'}
-          </span>
-        </div>
-      )}
+      <div className="flex items-center justify-between px-3 py-1.5 bg-slate-50/80 rounded-lg border border-slate-200/60">
+        <span className="text-[9px] text-slate-500 font-bold uppercase">Klasifikasi Otomatis</span>
+        <span className={`px-2 py-0.5 rounded text-[10px] font-bold border transition-all duration-250 ${
+          !form.widthCm || isNaN(wVal) ? 'text-slate-550 bg-slate-100/85 border-slate-300/80' :
+          wVal >= 150 ? 'text-rose-600 bg-rose-50 border-rose-200' :
+          wVal >= 50 ? 'text-amber-600 bg-amber-50 border-amber-250' : 'text-emerald-600 bg-emerald-50 border-emerald-200'
+        }`}>
+          {!form.widthCm || isNaN(wVal) ? 'Masukkan Lebar (B)' : wVal >= 150 ? 'Primer' : wVal >= 50 ? 'Sekunder' : 'Tersier'}
+        </span>
+      </div>
 
       {([
         { type: 'start', label: 'Koordinat Start', lat: 'startLat', lng: 'startLng' },
