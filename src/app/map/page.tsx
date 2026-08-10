@@ -52,12 +52,25 @@ export default function MapPage() {
           <CardHeader className="pb-2 bg-slate-50 border-b">
             <CardTitle className="text-sm font-semibold text-slate-800 flex items-center justify-between">
               <span>Peta Kota Bobong</span>
-              <div className="flex items-center flex-wrap gap-x-4 gap-y-1 text-xs font-normal">
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />Baik</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#f59e0b]" />Rusak Ringan</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />Rusak Berat</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-[#f97316]" />Tersumbat</span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full border border-dashed border-[#a855f7] bg-[#a855f7]/20" />Rencana</span>
+              <div className="flex flex-col lg:flex-row lg:items-center gap-x-5 gap-y-2 text-xs font-normal">
+                {/* Legend Kondisi Fisik */}
+                <div className="flex items-center flex-wrap gap-x-3 gap-y-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase mr-1">Kondisi:</span>
+                  <span className="flex items-center gap-1.25"><span className="w-2.5 h-2.5 rounded-full bg-[#10b981]" />Baik</span>
+                  <span className="flex items-center gap-1.25"><span className="w-2.5 h-2.5 rounded-full bg-[#f59e0b]" />R. Ringan</span>
+                  <span className="flex items-center gap-1.25"><span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />R. Berat</span>
+                  <span className="flex items-center gap-1.25"><span className="w-2.5 h-2.5 rounded-full bg-[#f97316]" />Tersumbat</span>
+                  <span className="flex items-center gap-1.25"><span className="w-2.5 h-2.5 rounded-full border border-dashed border-[#a855f7] bg-[#a855f7]/20" />Rencana</span>
+                </div>
+                {/* Pembatas / Divider */}
+                <div className="hidden lg:block h-3.5 w-[1px] bg-slate-200" />
+                {/* Legend Klasifikasi Saluran */}
+                <div className="flex items-center flex-wrap gap-x-3 gap-y-1 text-slate-500">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase mr-1">Tipe:</span>
+                  <span className="flex items-center gap-1.5"><span className="h-[5px] w-4.5 bg-slate-450 rounded-sm" />Primer</span>
+                  <span className="flex items-center gap-1.5"><span className="h-[3px] w-4.5 bg-slate-450 rounded-sm" />Sekunder</span>
+                  <span className="flex items-center gap-1.5"><span className="h-[1.5px] w-4.5 bg-slate-450 rounded-sm" />Tersier</span>
+                </div>
               </div>
             </CardTitle>
           </CardHeader>
