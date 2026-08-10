@@ -12,6 +12,7 @@ File ini berisi aturan arsitektur, standar penulisan kode, dan instruksi pemelih
   - Custom hook (`hooks/`) hanya boleh mengelola 1 alur state/fungsionalitas tertentu.
 * **Batas Maksimal 150 Baris (Max 150 Lines)**: Tidak ada satu pun file kode di dalam direktori `src/` yang boleh melebihi 150 baris kode (termasuk komentar dan impor). Jika melebihi batas ini, pisahkan ke dalam sub-komponen atau utility helper baru.
 * **Bebas Data Mock / Dummy**: Semua data harus dibaca atau ditulis secara dinamis dari/ke Supabase. Jika belum ada data, buat kondisi fallback UI kosong (*Empty State*) yang estetik, bukan menampilkan data tiruan statis.
+* **Manajemen Variabel Lingkungan (Env & Gitignore)**: Selalu perbarui berkas `.env.example` dan pastikan pengecualian telah diatur dengan benar di `.gitignore` setiap kali ada penambahan atau perubahan variabel lingkungan (environment variables) baru. Berkas `.env` asli yang berisi token rahasia tidak boleh di-commit ke Git.
 
 ---
 
