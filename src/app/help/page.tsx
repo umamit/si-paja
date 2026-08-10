@@ -65,7 +65,7 @@ export default function HelpPage() {
               <h3>Analisis Hidrologi Limpasan</h3>
             </div>
             <div className="text-xs text-slate-655 space-y-2 leading-relaxed">
-              <p>Perhitungan debit banjir rencana menggunakan <strong>Metode Rasional ($Q = 0.278 \cdot C \cdot I \cdot A$)</strong>:</p>
+              <p>Perhitungan debit banjir rencana menggunakan <strong>Metode Rasional (Q = 0,278 × C × I × A)</strong>:</p>
               <ul className="list-disc pl-4 space-y-1.5">
                 <li><strong>Q rencana (Qr)</strong>: Beban volume limpasan air hujan ekstrim yang akan melewati saluran.</li>
                 <li><strong>Q max</strong>: Batas tampung hidrolik aktual saluran berdasarkan material dan dimensi.</li>
