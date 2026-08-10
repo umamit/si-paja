@@ -43,6 +43,31 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
             </div>
           </div>
 
+          {/* Klasifikasi Drainase */}
+          <div className="space-y-2">
+            <p className="font-bold text-slate-400 uppercase tracking-wider text-[9px]">Klasifikasi Jaringan Drainase</p>
+            <div className="flex flex-col gap-2 bg-slate-950/20 p-3 rounded-lg border border-slate-800/60">
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wide">1. Saluran Primer (Utama)</span>
+                <p className="text-[9.5px] text-slate-400 leading-normal">
+                  Saluran induk (sungai, kali, atau kanal besar) yang menampung aliran dari saluran sekunder dan membuangnya langsung ke badan air penerima akhir (laut/sungai besar).
+                </p>
+              </div>
+              <div className="space-y-1 border-t border-slate-800/60 pt-1.5">
+                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wide">2. Saluran Sekunder (Penghubung)</span>
+                <p className="text-[9.5px] text-slate-400 leading-normal">
+                  Saluran penghubung berukuran sedang di sepanjang jalan utama yang menampung limpasan air dari saluran tersier lalu mengalirkannya ke saluran primer.
+                </p>
+              </div>
+              <div className="space-y-1 border-t border-slate-800/60 pt-1.5">
+                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wide">3. Saluran Tersier (Lingkungan)</span>
+                <p className="text-[9.5px] text-slate-400 leading-normal">
+                  Saluran lingkungan kecil di kawasan pemukiman warga/jalan lokal yang menangkap limpasan air permukaan awal dan mengalirkannya ke saluran sekunder.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Alur Hidrologi */}
           <div className="space-y-2">
             <p className="font-bold text-slate-400 uppercase tracking-wider text-[9px]">Alur Analisis Perencanaan Hidrologi (SNI)</p>
