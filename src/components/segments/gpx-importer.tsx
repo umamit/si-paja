@@ -80,18 +80,18 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
 
       {parsedData && (
         <div className="space-y-4 pt-2 border-t">
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Kategori</label>
+          <div className="grid grid-cols-3 gap-3">
+            <div className="space-y-1">
+              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider pl-0.5">Kategori</label>
               <Select value={category} onValueChange={(val: any) => setCategory(val)}>
-                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-full h-9 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent><SelectItem value="existing">Eksisting</SelectItem><SelectItem value="proposed">Rencana</SelectItem></SelectContent>
               </Select>
             </div>
-            <div>
-              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Material</label>
+            <div className="space-y-1">
+              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider pl-0.5">Material</label>
               <Select value={material} onValueChange={(val: any) => setMaterial(val)}>
-                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-full h-9 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="pasangan_batu">Batu Kali</SelectItem><SelectItem value="beton_precast">Precast</SelectItem>
                   <SelectItem value="tanah">Tanah</SelectItem><SelectItem value="belum_ada">Belum Ada</SelectItem>
@@ -99,10 +99,10 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <label className="block text-[10px] font-semibold text-slate-500 mb-1">Kondisi</label>
+            <div className="space-y-1">
+              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider pl-0.5">Kondisi</label>
               <Select value={condition} onValueChange={(val: any) => setCondition(val)}>
-                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-full h-9 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="baik">Baik</SelectItem><SelectItem value="rusak_ringan">R. Ringan</SelectItem>
                   <SelectItem value="rusak_berat">R. Berat</SelectItem><SelectItem value="tersumbat">Tersumbat</SelectItem>
@@ -112,13 +112,13 @@ export function GpxImporter({ onSuccess, surveyorId }: GpxImporterProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 mb-1">Lebar (B) (cm)</label>
-              <Input type="number" value={widthCm} onChange={(e) => setWidthCm(e.target.value)} className="h-8 text-xs bg-slate-50/35" required />
+            <div className="space-y-1">
+              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider pl-0.5">Lebar (B) (cm)</label>
+              <Input type="number" value={widthCm} onChange={(e) => setWidthCm(e.target.value)} className="text-xs h-9 bg-slate-50/50" required />
             </div>
-            <div>
-              <label className="block text-[10px] font-bold text-slate-500 mb-1">Tinggi (H) (cm)</label>
-              <Input type="number" value={depthCm} onChange={(e) => setDepthCm(e.target.value)} className="h-8 text-xs bg-slate-50/35" required />
+            <div className="space-y-1">
+              <label className="text-[9px] font-bold text-slate-500 uppercase tracking-wider pl-0.5">Tinggi (H) (cm)</label>
+              <Input type="number" value={depthCm} onChange={(e) => setDepthCm(e.target.value)} className="h-8 text-xs h-9 bg-slate-50/50" required />
             </div>
           </div>
 
