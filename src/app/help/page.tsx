@@ -105,6 +105,20 @@ export default function HelpPage() {
             </div>
           </Card>
         </div>
+
+        {/* Rujukan Regulasi SNI Dinas PUPR */}
+        <div className="p-4 bg-amber-50/50 border border-amber-250/70 rounded-xl text-xs text-slate-700 mt-6 space-y-2">
+          <h4 className="font-bold text-amber-900 flex items-center gap-1.5 uppercase tracking-wide text-[10px]">
+            Rujukan Regulasi & Standar Nasional Indonesia (SNI)
+          </h4>
+          <p className="leading-relaxed text-[11px] text-slate-600">
+            Aplikasi SI-PAJA menyelaraskan seluruh perhitungan kapasitas penampung parit, estimasi aliran, dan tinggi jagaan kritis berdasarkan:
+          </p>
+          <ul className="list-disc pl-5 space-y-1 text-slate-600 text-[11px]">
+            <li><strong>SNI 2415:2016 (Debit Banjir Rencana)</strong>: Landasan penghitungan limpasan pemukiman menggunakan Metode Rasional (Q = 0,278 × C × I × A).</li>
+            <li><strong>SNI 03-3424-1994 (Drainase Permukaan Jalan)</strong>: Acuan klasifikasi koefisien material (C) dan batas tinggi jagaan (*freeboard*) minimal 10 cm untuk perlindungan bahaya luapan.</li>
+          </ul>
+        </div>
       </div>
     </AppLayout>
   );
