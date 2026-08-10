@@ -2,7 +2,7 @@
 
 import { AppLayout } from '@/components/shared/layout';
 import { Card } from '@/components/ui/card';
-import { BookOpen, FileUp, HelpCircle, RefreshCw } from 'lucide-react';
+import { BookOpen, FileUp, HelpCircle, RefreshCw, Settings } from 'lucide-react';
 
 export default function HelpPage() {
   return (
@@ -86,6 +86,21 @@ export default function HelpPage() {
                 <li><strong>Simulasi Dimensi Rencana</strong>: Buka form pendaftaran, pilih mode <strong>Perbarui</strong>, pilih saluran, lalu ubah kategori menjadi <strong>Rencana (Proposed)</strong>.</li>
                 <li><strong>Modifikasi Penampang</strong>: Naikkan nilai Lebar (B) atau Tinggi (H) secara bertahap pada form, lalu klik simpan.</li>
                 <li><strong>Verifikasi Struktur</strong>: Pastikan indikator berubah menjadi <strong>🟢 Kapasitas Aman</strong> (tinggi jagaan &gt; 10 cm) pada sketsa dinamis sebelum diajukan ke anggaran RAB Masterplan APBD.</li>
+              </ul>
+            </div>
+          </Card>
+          {/* Guide Card 6 */}
+          <Card className="p-6 bg-white shadow-sm border border-slate-100 space-y-4">
+            <div className="flex items-center space-x-3 text-slate-900 font-bold">
+              <div className="p-2 rounded-lg bg-indigo-50 text-indigo-700"><Settings className="h-5 w-5" /></div>
+              <h3>Pengaturan Tarif & Standar Harga Satuan (SHS)</h3>
+            </div>
+            <div className="text-xs text-slate-655 space-y-2 leading-relaxed">
+              <p>Mekanisme pembaruan harga satuan dinamis untuk kalkulator anggaran:</p>
+              <ul className="list-disc pl-4 space-y-1.5">
+                <li><strong>Akses Pengaturan</strong>: Buka menu <strong>Pengaturan</strong> di sidebar untuk melihat tarif pembangunan aktif.</li>
+                <li><strong>Sesuaikan Nilai</strong>: Ganti nominal rupiah sesuai SK penetapan Bupati/Kepala Dinas Taliabu yang terbaru.</li>
+                <li><strong>Pembaruan Otomatis</strong>: Klik simpan. Tarif baru akan otomatis langsung diterapkan di panel detail estimasi saluran serta halaman cetak laporan keuangan.</li>
               </ul>
             </div>
           </Card>
