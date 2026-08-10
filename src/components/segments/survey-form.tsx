@@ -64,7 +64,7 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormP
       <div className="grid grid-cols-2 gap-3 bg-slate-50/50 p-2 rounded-lg border border-slate-150">
         <div>
           <label className="text-[9px] font-bold text-slate-500 uppercase">Mode Form</label>
-          <Select value={mode} onValueChange={(val: any) => { setMode(val); if(val==='create') { setSelectedId(''); } }}>
+          <Select value={mode} onValueChange={(val: any) => { setMode(val); setSelectedId(''); setForm({ name: '', category: 'existing', material: 'pasangan_batu', condition: 'baik', lengthM: '', widthCm: '', depthCm: '' }); setCoords({ startLat: '', startLng: '', endLat: '', endLng: '' }); }}>
             <SelectTrigger className="w-full text-xs h-8 bg-white"><SelectValue /></SelectTrigger>
             <SelectContent><SelectItem value="create">Baru</SelectItem><SelectItem value="update">Perbarui</SelectItem></SelectContent>
           </Select>

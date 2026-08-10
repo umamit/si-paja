@@ -55,7 +55,7 @@ export function GpxImporter({ onSuccess, surveyorId, segments = [] }: GpxImporte
       <div className="grid grid-cols-2 gap-3 bg-slate-50/50 p-2 rounded-lg border border-slate-150">
         <div>
           <label className="text-[9px] font-bold text-slate-500 uppercase">Mode Impor</label>
-          <Select value={mode} onValueChange={(val: any) => { setMode(val); if(val==='create') { setSelectedId(''); } }}>
+          <Select value={mode} onValueChange={(val: any) => { setMode(val); setSelectedId(''); setParsedData(null); setCategory('existing'); setMaterial('pasangan_batu'); setCondition('baik'); setWidthCm('50'); setDepthCm('50'); }}>
             <SelectTrigger className="w-full text-xs h-8 bg-white"><SelectValue /></SelectTrigger>
             <SelectContent><SelectItem value="create">Baru</SelectItem><SelectItem value="update">Perbarui</SelectItem></SelectContent>
           </Select>
