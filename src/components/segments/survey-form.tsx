@@ -21,7 +21,6 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormP
   const [loading, setLoading] = useState(false);
 
   const handleSelectSegment = (id: any) => {
-    if (!id) return;
     const s = segments.find(x => x.id === id);
     if (!s) return;
     setSelectedId(id);
@@ -30,18 +29,17 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormP
   };
 
   const getDeviceLocation = (type: 'start' | 'end') => {
-    if (typeof window === 'undefined' || !navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition((pos) => {
+    navigator.geolocation?.getCurrentPosition((pos) => {
       setCoords((prev) => ({ ...prev, [type === 'start' ? 'startLat' : 'endLat']: pos.coords.latitude.toFixed(6), [type === 'start' ? 'startLng' : 'endLng']: pos.coords.longitude.toFixed(6) }));
     });
   };
 
   const handlePhotoUpload = async (file: File) => {
     if (isPlaceholder) return URL.createObjectURL(file);
-    const filePath = `segments/${Date.now()}.${file.name.split('.').pop()}`;
-    const { error } = await supabase.storage.from('drainage-photos').upload(filePath, file);
+    const path = `segments/${Date.now()}.${file.name.split('.').pop()}`;
+    const { error } = await supabase.storage.from('drainage-photos').upload(path, file);
     if (error) throw error;
-    return supabase.storage.from('drainage-photos').getPublicUrl(filePath).data.publicUrl;
+    return supabase.storage.from('drainage-photos').getPublicUrl(path).data.publicUrl;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,6 +56,8 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormP
       }, mode === 'update' ? selectedId : undefined);
     } catch (err) { console.error(err); } finally { setLoading(false); }
   };
+
+  const wVal = parseFloat(form.widthCm);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3.5 max-w-lg bg-white p-4.5 rounded-xl border border-slate-100 shadow-sm text-slate-800 text-xs">
@@ -111,11 +111,24 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: SurveyFormP
         ))}
       </div>
 
+      {form.widthCm && !isNaN(wVal) && (
+        <div className="flex items-center justify-between px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200/60">
+          <span className="text-[9px] text-slate-500 font-bold uppercase">Klasifikasi Otomatis</span>
+          <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
+            wVal >= 150 ? 'text-rose-600 bg-rose-50 border-rose-200' :
+            wVal >= 50 ? 'text-amber-600 bg-amber-50 border-amber-250' :
+            'text-emerald-600 bg-emerald-50 border-emerald-200'
+          }`}>
+            {wVal >= 150 ? 'Primer' : wVal >= 50 ? 'Sekunder' : 'Tersier'}
+          </span>
+        </div>
+      )}
+
       {([
         { type: 'start', label: 'Koordinat Start', lat: 'startLat', lng: 'startLng' },
         { type: 'end', label: 'Koordinat End', lat: 'endLat', lng: 'endLng' }
       ] as const).map((c) => (
-        <div key={c.type} className="space-y-2 border border-slate-150 p-3 rounded-xl bg-slate-50/50">
+        <div key={c.type} className="space-y-2 border border-slate-150 p-2.5 rounded-xl bg-slate-50/50">
           <div className="flex justify-between items-center"><span className="font-bold text-slate-600">{c.label}</span>
             <Button type="button" size="sm" variant="outline" className="h-6.5 text-[9px] font-bold uppercase" onClick={() => getDeviceLocation(c.type)}><Navigation className="h-3 w-3 mr-1" />Ambil GPS</Button>
           </div>
