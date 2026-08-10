@@ -20,6 +20,7 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [fullName, setFullName] = useState('');
   const [shs, setShs] = useState({ cleaning: '120000', majorRepair: '2200000', minorRepair: '850000' });
+  const [rainIntensity, setRainIntensity] = useState('110');
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
 
@@ -31,10 +32,12 @@ export default function SettingsPage() {
     }).catch(console.error).finally(() => setFetching(false));
 
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('pupr_shs');
-      if (stored) {
-        try { setShs(JSON.parse(stored)); } catch (e) { console.error(e); }
+      const storedShs = localStorage.getItem('pupr_shs');
+      if (storedShs) {
+        try { setShs(JSON.parse(storedShs)); } catch (e) { console.error(e); }
       }
+      const storedRain = localStorage.getItem('pupr_rain_intensity');
+      if (storedRain) setRainIntensity(storedRain);
     }
   }, [router]);
 
@@ -55,6 +58,7 @@ export default function SettingsPage() {
         if (error) throw error;
       }
       localStorage.setItem('pupr_shs', JSON.stringify(shs));
+      localStorage.setItem('pupr_rain_intensity', rainIntensity);
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       alert('Pengaturan berhasil disimpan!');
     } catch (err) {
@@ -89,8 +93,8 @@ export default function SettingsPage() {
           </Card>
 
           <Card className="border-t-4 border-t-[#003366] border-slate-100 shadow-sm rounded-xl">
-            <CardHeader className="pb-3"><CardTitle className="text-base font-bold flex items-center gap-2 text-slate-900"><Calculator className="h-4.5 w-4.5 text-slate-500" />Standar Harga Satuan (SHS) Kabupaten Pulau Taliabu</CardTitle>
-              <CardDescription className="text-[10px] text-slate-400">Tarif per satuan pengerjaan fisik untuk penentuan otomatis kapasitas anggaran rencana (RAB).</CardDescription>
+            <CardHeader className="pb-3"><CardTitle className="text-base font-bold flex items-center gap-2 text-slate-900"><Calculator className="h-4.5 w-4.5 text-slate-500" />Standar Harga Satuan (SHS) & Parameter Hidrologi</CardTitle>
+              <CardDescription className="text-[10px] text-slate-400">Tarif pekerjaan konstruksi dan nilai intensitas hujan rencana untuk penentuan otomatis kapasitas saluran (RAB & Q rencana).</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4.5">
               <div className="grid grid-cols-3 gap-4">
@@ -103,6 +107,11 @@ export default function SettingsPage() {
                 <div className="space-y-1.5"><label className="text-[9px] font-bold text-slate-400 uppercase">Rehab Total / Baru (meter)</label>
                   <Input type="number" value={shs.majorRepair} onChange={(e) => setShs({ ...shs, majorRepair: e.target.value })} className="h-9.5 text-xs" required />
                 </div>
+              </div>
+              <div className="border-t border-slate-100 pt-3.5 space-y-1.5">
+                <label className="text-[9px] font-bold text-slate-400 uppercase">Intensitas Hujan Rencana (I) (mm/jam)</label>
+                <div className="max-w-[200px]"><Input type="number" value={rainIntensity} onChange={(e) => setRainIntensity(e.target.value)} className="h-9.5 text-xs" required /></div>
+                <p className="text-[8.5px] text-slate-400 font-medium">Diperoleh dari Analisis Frekuensi Curah Hujan Rencana (Kala Ulang APBD/Masterplan Kota Bobong).</p>
               </div>
             </CardContent>
           </Card>

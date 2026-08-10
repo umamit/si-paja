@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { DrainageSegment } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,25 +11,24 @@ interface HydrologyAnalysisProps {
 }
 
 export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
-  const elevStart = segment.start_elevation_m ?? 0;
-  const elevEnd = segment.end_elevation_m ?? 0;
+  const [rainIntensity, setRainIntensity] = useState(110);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('pupr_rain_intensity');
+      if (stored) setRainIntensity(Number(stored) || 110);
+    }
+  }, []);
+
+  const elevStart = segment.start_elevation_m ?? 0, elevEnd = segment.end_elevation_m ?? 0;
   const deltaElev = elevStart - elevEnd;
   const slopePercent = segment.length_m > 0 ? (Math.abs(deltaElev) / segment.length_m) * 100 : 0;
   const flowDir = deltaElev >= 0 ? 'Awal ke Akhir' : 'Akhir ke Awal';
-
-  // Koefisien Limpasan (C) berdasarkan material
-  const runOffCoeff: Record<string, number> = {
-    beton_precast: 0.85, pasangan_batu: 0.75, tanah: 0.50, belum_ada: 0.90, lainnya: 0.70,
-  };
-
+  const runOffCoeff: Record<string, number> = { beton_precast: 0.85, pasangan_batu: 0.75, tanah: 0.50, belum_ada: 0.90, lainnya: 0.70 };
   const C = runOffCoeff[segment.material] || 0.7;
-  const I = 110; // Intensitas Curah Hujan Rencana Taliabu (mm/jam) - Hujan Ekstrim
-  const catchmentArea = (segment.length_m * 15) / 1000000; // Lebar koridor limpasan = 15m (dalam km2)
-  const Q_rencana = 0.278 * C * I * catchmentArea; // Debit Limpasan Rencana Q = 0.278 * C * I * A (m3/s)
-
-  const B = segment.width_cm / 100;  // Lebar Saluran (B) dalam meter
-  const H = segment.depth_cm / 100;  // Tinggi Saluran (H) dalam meter
-  const V = 0.85; // Kecepatan aliran rencana rata-rata (m/s)
+  const I = rainIntensity;
+  const catchmentArea = (segment.length_m * 15) / 1000000;
+  const Q_rencana = 0.278 * C * I * catchmentArea;
+  const B = segment.width_cm / 100, H = segment.depth_cm / 100, V = 0.85;
   
   // Kapasitas Hidrolik Maksimum Qmax
   const Q_aktual = V * (B * H);
