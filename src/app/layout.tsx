@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SI-PAJA Pulau Taliabu | Dinas PUPR",
-  description: "Sistem Informasi Pemetaan dan Analisa Jaringan Drainase Terintegrasi di Pulau Taliabu - Dinas Pekerjaan Umum dan Penataan Ruang",
+  title: "SI-PAJA Kabupaten Pulau Taliabu | Dinas PUPR",
+  description: "Sistem Informasi Pemetaan & Analisis Jaringan Air (SI-PAJA) Kabupaten Pulau Taliabu - Dinas Pekerjaan Umum dan Penataan Ruang",
 };
 
 export default function RootLayout({

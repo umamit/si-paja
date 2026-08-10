@@ -25,8 +25,8 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
             <Info className="h-5 w-5 text-amber-400 shrink-0" />
             TENTANG SI-PAJA
           </DialogTitle>
-          <DialogDescription className="text-[11px] text-slate-400 font-medium">
-            Sistem Informasi Geografis Pemetaan & Analisis Drainase Jalan Raya Bobong
+          <DialogDescription className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">
+            Sistem Informasi Pemetaan & Analisis Jaringan Air (SI-PAJA) Kabupaten Pulau Taliabu
           </DialogDescription>
         </DialogHeader>
 
