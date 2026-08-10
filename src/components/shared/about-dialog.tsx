@@ -68,6 +68,32 @@ export function AboutDialog({ open, onOpenChange }: AboutDialogProps) {
             </div>
           </div>
 
+          {/* Alur Aliran Air */}
+          <div className="space-y-1.5">
+            <p className="font-bold text-slate-400 uppercase tracking-wider text-[9px]">Ilustrasi Alur Aliran Air</p>
+            <div className="flex items-center justify-between bg-slate-950/40 p-2.5 rounded-lg border border-slate-800 text-[9px] font-bold text-center">
+              <div className="flex-1 text-emerald-400 bg-emerald-500/10 py-1.5 rounded border border-emerald-500/25">
+                Tersier
+                <span className="block text-[7.5px] font-normal text-slate-400 mt-0.5">Lingkungan</span>
+              </div>
+              <span className="px-1 text-slate-500 text-xs">→</span>
+              <div className="flex-1 text-amber-400 bg-amber-500/10 py-1.5 rounded border border-amber-500/25">
+                Sekunder
+                <span className="block text-[7.5px] font-normal text-slate-400 mt-0.5">Jalan Utama</span>
+              </div>
+              <span className="px-1 text-slate-500 text-xs">→</span>
+              <div className="flex-1 text-rose-400 bg-rose-500/10 py-1.5 rounded border border-rose-500/25">
+                Primer
+                <span className="block text-[7.5px] font-normal text-slate-400 mt-0.5">Kanal Utama</span>
+              </div>
+              <span className="px-1 text-slate-500 text-xs">→</span>
+              <div className="flex-1 text-blue-400 bg-blue-500/10 py-1.5 rounded border border-blue-500/25">
+                Muara
+                <span className="block text-[7.5px] font-normal text-slate-400 mt-0.5">Laut/Sungai</span>
+              </div>
+            </div>
+          </div>
+
           {/* Alur Hidrologi */}
           <div className="space-y-2">
             <p className="font-bold text-slate-400 uppercase tracking-wider text-[9px]">Alur Analisis Perencanaan Hidrologi (SNI)</p>
