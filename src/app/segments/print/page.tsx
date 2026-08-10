@@ -38,16 +38,24 @@ export default function PrintReportPage() {
       .finally(() => setLoading(false));
   }, [router]);
 
+  const [rates, setRates] = useState({ cleaning: 120000, majorRepair: 2200000, minorRepair: 850000 });
+  useEffect(() => {
+    const stored = typeof window !== 'undefined' && localStorage.getItem('pupr_shs');
+    if (stored) {
+      try {
+        const p = JSON.parse(stored);
+        setRates({ cleaning: Number(p.cleaning) || 120000, majorRepair: Number(p.majorRepair) || 2200000, minorRepair: Number(p.minorRepair) || 850000 });
+      } catch (e) {}
+    }
+  }, []);
   const totalLength = segments.reduce((sum, seg) => sum + Number(seg.length_m), 0);
-
   const calculateRAB = (seg: DrainageSegment) => {
     const vol = Number(seg.length_m) * (Number(seg.width_cm) / 100) * (Number(seg.depth_cm) / 100);
-    if (seg.condition === 'tersumbat') return vol * 120000;
-    if (seg.condition === 'rusak_berat') return Number(seg.length_m) * 2200000;
-    if (seg.condition === 'rusak_ringan') return Number(seg.length_m) * 850000;
+    if (seg.condition === 'tersumbat') return vol * rates.cleaning;
+    if (seg.condition === 'rusak_berat') return Number(seg.length_m) * rates.majorRepair;
+    if (seg.condition === 'rusak_ringan') return Number(seg.length_m) * rates.minorRepair;
     return 0;
   };
-
   const totalRAB = segments.reduce((sum, seg) => sum + calculateRAB(seg), 0);
 
   if (loading) {

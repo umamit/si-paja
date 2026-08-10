@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { DrainageSegment } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -13,13 +16,27 @@ export function CostEstimator({ segment }: CostEstimatorProps) {
   const depth = Number(segment.depth_cm) / 100;
   const volume = length * width * depth;
 
-  // Disesuaikan dengan SHS (Standar Harga Satuan) Kabupaten Pulau Taliabu
-  // Indeks kemahalan tinggi karena mobilisasi material via laut (island factor)
-  const rates = {
-    cleaning: 120000,     // per m3 (Normalisasi sedimen manual + angkut)
-    majorRepair: 2200000, // per meter (Rehabilitasi total pasangan batu / precast)
-    minorRepair: 850000,  // per meter (Pemeliharaan/siaran pasangan batu rusak ringan)
-  };
+  const [rates, setRates] = useState({
+    cleaning: 120000,
+    majorRepair: 2200000,
+    minorRepair: 850000,
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('pupr_shs');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          setRates({
+            cleaning: Number(parsed.cleaning) || 120000,
+            majorRepair: Number(parsed.majorRepair) || 2200000,
+            minorRepair: Number(parsed.minorRepair) || 850000,
+          });
+        } catch (e) { console.error(e); }
+      }
+    }
+  }, []);
 
   let estimatedCost = 0;
   let workType = 'Tidak ada rekomendasi pekerjaan fisik';
