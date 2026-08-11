@@ -12,6 +12,7 @@ import { supabase } from '@/lib/supabase/client';
 import { User, Database, Calculator, Save, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Profile } from '@/types';
+import { ElevationBackfillCard } from '@/components/settings/elevation-backfill-card';
 
 const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
 
@@ -115,6 +116,8 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
+
+          <ElevationBackfillCard />
 
           <Card className="border-slate-100 shadow-sm rounded-xl bg-slate-50/20">
             <CardHeader className="pb-3"><CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-900"><Database className="h-4 w-4 text-slate-500" />Koneksi & Sistem Supabase</CardTitle></CardHeader>
