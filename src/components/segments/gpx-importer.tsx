@@ -47,6 +47,8 @@ export function GpxImporter({ onSuccess, surveyorId, segments = [] }: GpxImporte
       start_lat: parsedData.startLat, start_lng: parsedData.startLng, end_lat: parsedData.endLat, end_lng: parsedData.endLng,
       gps_source: 'file_import', surveyor_id: surveyorId,
       path_coordinates: parsedData.pathCoordinates,
+      start_elevation_m: parsedData.startElevationM || 0,
+      end_elevation_m: parsedData.endElevationM || 0,
     }, mode === 'update' ? selectedId : undefined);
     setParsedData(null);
   };

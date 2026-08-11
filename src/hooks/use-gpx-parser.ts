@@ -8,6 +8,8 @@ interface ParsedGpsData {
   endLng: number;
   lengthM: number;
   pathCoordinates: [number, number][];
+  startElevationM: number;
+  endElevationM: number;
 }
 
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -83,18 +85,36 @@ export function useGpxParser() {
             );
           }
 
-          const nameNode = xmlDoc.getElementsByTagName('name')[0];
-          const name = nameNode?.textContent || file.name.replace(/\.[^/.]+$/, '');
+          const fetchElevation = async (lat: number, lng: number): Promise<number> => {
+            try {
+              const res = await fetch(`/api/elevation?lat=${lat}&lng=${lng}`);
+              if (!res.ok) return 0;
+              const data = await res.json();
+              return data.elevation || 0;
+            } catch {
+              return 0;
+            }
+          };
 
-          resolve({
-            name,
-            startLat: start.lat,
-            startLng: start.lon,
-            endLat: end.lat,
-            endLng: end.lon,
-            lengthM: parseFloat(totalLength.toFixed(1)),
-            pathCoordinates: points.map((p) => [p.lat, p.lon]),
-          });
+          Promise.all([
+            fetchElevation(start.lat, start.lon),
+            fetchElevation(end.lat, end.lon)
+          ]).then(([startElev, endElev]) => {
+            const nameNode = xmlDoc.getElementsByTagName('name')[0];
+            const name = nameNode?.textContent || file.name.replace(/\.[^/.]+$/, '');
+
+            resolve({
+              name,
+              startLat: start.lat,
+              startLng: start.lon,
+              endLat: end.lat,
+              endLng: end.lon,
+              lengthM: parseFloat(totalLength.toFixed(1)),
+              pathCoordinates: points.map((p) => [p.lat, p.lon]),
+              startElevationM: startElev,
+              endElevationM: endElev,
+            });
+          }).catch(reject);
         } catch (err: any) {
           setError(err.message || 'Gagal membaca file GPS.');
           reject(err);
