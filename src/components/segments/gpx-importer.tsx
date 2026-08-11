@@ -121,7 +121,9 @@ export function GpxImporter({ onSuccess, surveyorId, segments = [] }: GpxImporte
         <div className="flex items-center justify-between">
           <span className="font-medium">Berkas Contoh:</span>
           <div className="flex gap-2.5 font-bold">
-            <a href="/samples/segmen1.kml" download className="text-[#003366] hover:underline">Segmen 1 Taliabu (.kml)</a>
+            <a href="/samples/segmen1.kml" download className="text-[#003366] hover:underline">Segmen 1 (.kml)</a>
+            <span className="text-slate-300">&bull;</span>
+            <a href="/samples/sungai.kml" download className="text-[#003366] hover:underline">Sungai (.kml)</a>
             <span className="text-slate-300">&bull;</span>
             <a href="/samples/sample.gpx" download className="text-[#003366] hover:underline">Sample GPX</a>
             <span className="text-slate-300">&bull;</span>
