@@ -12,8 +12,7 @@ export async function backfillElevation(
 ): Promise<BackfillResult> {
   const { data: segments, error } = await supabase
     .from('drainage_segments')
-    .select('id, name, start_lat, start_lng, end_lat, end_lng, start_elevation_m, end_elevation_m')
-    .or('start_elevation_m.is.null,end_elevation_m.is.null,start_elevation_m.eq.0,end_elevation_m.eq.0');
+    .select('id, name, start_lat, start_lng, end_lat, end_lng, start_elevation_m, end_elevation_m');
 
   if (error) throw error;
   if (!segments || segments.length === 0) return { total: 0, updated: 0, skipped: 0, failed: 0 };

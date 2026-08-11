@@ -38,8 +38,8 @@ export function ElevationBackfillCard() {
           <Mountain className="h-4 w-4 text-emerald-600" />Sinkronisasi Elevasi DEM
         </CardTitle>
         <CardDescription className="text-[10px] text-slate-400">
-          Perbarui otomatis nilai ketinggian (elevasi) seluruh segmen lama dari data raster DEMNAS Taliabu.
-          Hanya segmen yang belum memiliki nilai elevasi yang akan diperbarui.
+          Timpa nilai ketinggian (elevasi) <strong>seluruh segmen</strong> dengan data raster DEMNAS Taliabu yang akurat,
+          termasuk segmen yang sebelumnya sudah memiliki elevasi dari Google Earth atau GPS lapangan.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
