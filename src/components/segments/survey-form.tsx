@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/lib/supabase/client';
-import { Loader2, Navigation, FileImage } from 'lucide-react';
+import { Loader2, FileImage } from 'lucide-react';
 import { DrainageSegment } from '@/types';
+import { useCoordElevation } from '@/hooks/use-coord-elevation';
+import { CoordInput } from './coord-input';
 const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
 export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess: (input: CreateSegmentInput, updateId?: string) => void; surveyorId?: string; segments?: DrainageSegment[]; }) {
   const [mode, setMode] = useState<'create' | 'update'>('create');
@@ -15,6 +17,7 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
   const [coords, setCoords] = useState({ startLat: '', startLng: '', endLat: '', endLng: '' });
   const [fileName, setFileName] = useState('');
   const [loading, setLoading] = useState(false);
+  const { startElev, endElev, fetchingStart, fetchingEnd, fetchElev } = useCoordElevation();
 
   const handleSelectSegment = (id: any) => {
     const s = segments.find(x => x.id === id);
@@ -25,7 +28,10 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
   };
   const getDeviceLocation = (type: 'start' | 'end') => {
     navigator.geolocation?.getCurrentPosition((pos) => {
-      setCoords((prev) => ({ ...prev, [type === 'start' ? 'startLat' : 'endLat']: pos.coords.latitude.toFixed(6), [type === 'start' ? 'startLng' : 'endLng']: pos.coords.longitude.toFixed(6) }));
+      const lat = pos.coords.latitude.toFixed(6);
+      const lng = pos.coords.longitude.toFixed(6);
+      setCoords((prev) => ({ ...prev, [type === 'start' ? 'startLat' : 'endLat']: lat, [type === 'start' ? 'startLng' : 'endLng']: lng }));
+      fetchElev(type, lat, lng);
     });
   };
   const handlePhotoUpload = async (file: File) => {
@@ -46,6 +52,8 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
         length_m: parseFloat(form.lengthM), width_cm: parseFloat(form.widthCm), depth_cm: parseFloat(form.depthCm),
         start_lat: parseFloat(coords.startLat), start_lng: parseFloat(coords.startLng), end_lat: parseFloat(coords.endLat), end_lng: parseFloat(coords.endLng),
         photo_url: photoUrl || undefined, gps_source: 'device_gps', surveyor_id: surveyorId,
+        start_elevation_m: startElev ?? 0,
+        end_elevation_m: endElev ?? 0,
       }, mode === 'update' ? selectedId : undefined);
     } catch (err) { console.error(err); } finally { setLoading(false); }
   };
@@ -115,20 +123,12 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
         </span>
       </div>
 
-      {([
-        { type: 'start', label: 'Koordinat Start', lat: 'startLat', lng: 'startLng' },
-        { type: 'end', label: 'Koordinat End', lat: 'endLat', lng: 'endLng' }
-      ] as const).map((c) => (
-        <div key={c.type} className="space-y-2 border border-slate-150 p-2.5 rounded-xl bg-slate-50/50">
-          <div className="flex justify-between items-center"><span className="font-bold text-slate-600">{c.label}</span>
-            <Button type="button" size="sm" variant="outline" className="h-6.5 text-[9px] font-bold uppercase" onClick={() => getDeviceLocation(c.type)}><Navigation className="h-3 w-3 mr-1" />Ambil GPS</Button>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <Input placeholder={`${c.type === 'start' ? 'Start' : 'End'} Lat`} type="number" step="any" value={coords[c.lat]} onChange={(e) => setCoords({...coords, [c.lat]: e.target.value})} className="h-8.5 bg-white" required />
-            <Input placeholder={`${c.type === 'start' ? 'Start' : 'End'} Lng`} type="number" step="any" value={coords[c.lng]} onChange={(e) => setCoords({...coords, [c.lng]: e.target.value})} className="h-8.5 bg-white" required />
-          </div>
-        </div>
-      ))}
+      <CoordInput type="start" lat={coords.startLat} lng={coords.startLng} elev={startElev} fetching={fetchingStart}
+        onChangeLat={(v) => setCoords({ ...coords, startLat: v })} onChangeLng={(v) => setCoords({ ...coords, startLng: v })}
+        onBlur={() => fetchElev('start', coords.startLat, coords.startLng)} onGps={() => getDeviceLocation('start')} />
+      <CoordInput type="end" lat={coords.endLat} lng={coords.endLng} elev={endElev} fetching={fetchingEnd}
+        onChangeLat={(v) => setCoords({ ...coords, endLat: v })} onChangeLng={(v) => setCoords({ ...coords, endLng: v })}
+        onBlur={() => fetchElev('end', coords.endLat, coords.endLng)} onGps={() => getDeviceLocation('end')} />
 
       <div>
         <label className="block text-[9px] font-bold text-slate-500 uppercase pl-0.5">Unggah Foto Lokasi</label>
