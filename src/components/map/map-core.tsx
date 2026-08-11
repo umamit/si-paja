@@ -49,9 +49,9 @@ export function MapCore({ segments }: MapCoreProps) {
             (seg.condition === 'tersumbat' || seg.condition === 'rusak_berat') && (seg.condition === 'tersumbat' ? 'Saluran Tersumbat' : 'Kerusakan Fisik Berat'),
             Q_r > Q_m && 'Debit Limpasan Melebihi Kapasitas (Luapan)',
             dElev < 0 && 'Aliran Terbalik (Mendaki)',
-            slope < 0.1 && seg.length_m > 0 && 'Kemiringan Kritis / Sangat Datar (<0.1%)'
+            slope < 0.05 && seg.length_m > 0 && 'Kemiringan Sangat Datar (<0.05%)'
           ].filter(Boolean) as string[];
-          if (reasons.length === 0) return null;
+          if (reasons.length < 2) return null;
 
           return (
             <Circle key={`hotspot-${seg.id}`} center={[(seg.start_lat + seg.end_lat) / 2, (seg.start_lng + seg.end_lng) / 2]} radius={Math.max(seg.length_m / 2, 40)} pathOptions={{ color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.2, weight: 1.5 }}>
