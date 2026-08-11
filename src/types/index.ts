@@ -33,6 +33,7 @@ export interface DrainageSegment {
   photo_after_url?: string;
   gps_source: GpsSourceType;
   surveyor_id?: string;
+  path_coordinates?: [number, number][];
   created_at: string;
 }
 

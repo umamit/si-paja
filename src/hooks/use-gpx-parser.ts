@@ -7,6 +7,7 @@ interface ParsedGpsData {
   endLat: number;
   endLng: number;
   lengthM: number;
+  pathCoordinates: [number, number][];
 }
 
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -92,6 +93,7 @@ export function useGpxParser() {
             endLat: end.lat,
             endLng: end.lon,
             lengthM: parseFloat(totalLength.toFixed(1)),
+            pathCoordinates: points.map((p) => [p.lat, p.lon]),
           });
         } catch (err: any) {
           setError(err.message || 'Gagal membaca file GPS.');

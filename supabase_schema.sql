@@ -37,6 +37,7 @@ create table drainage_segments (
   category text check (category in ('existing', 'proposed')) default 'existing' not null,
   gps_source text check (gps_source in ('device_gps', 'file_import', 'manual_input')) default 'manual_input' not null,
   surveyor_id uuid references profiles(id) on delete set null,
+  path_coordinates jsonb, -- Array koordinat lengkap [[lat, lng], ...]
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 

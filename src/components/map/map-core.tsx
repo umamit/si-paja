@@ -8,14 +8,7 @@ import { DrainageSegment } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { useFlowRouting, EnrichedSegment } from '@/hooks/use-flow-routing';
 
-const fixLeafletIcon = () => {
-  delete (L.Icon.Default.prototype as any)._getIconUrl;
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  });
-};
+import { fixLeafletIcon, conditionColors, conditionLabels } from './map-utils';
 
 interface MapCoreProps { segments: DrainageSegment[]; }
 
@@ -31,8 +24,6 @@ export function MapCore({ segments }: MapCoreProps) {
 
   const routedSegments = useFlowRouting(segments, rainIntensity);
   const centerLat = -1.9450, centerLng = 124.3790;
-  const conditionColors: Record<string, string> = { baik: '#10b981', rusak_ringan: '#f59e0b', rusak_berat: '#ef4444', tersumbat: '#f97316' };
-  const conditionLabels: Record<string, string> = { baik: 'Baik', rusak_ringan: 'Rusak Ringan', rusak_berat: 'Rusak Berat', tersumbat: 'Tersumbat' };
 
   return (
     <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 shadow-inner relative">
@@ -96,7 +87,9 @@ export function MapCore({ segments }: MapCoreProps) {
         ))}
 
         {(showFlowRouting ? routedSegments : (segments as EnrichedSegment[])).map((seg) => {
-          const positions: [number, number][] = [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
+          const positions: [number, number][] = seg.path_coordinates && seg.path_coordinates.length > 0
+            ? seg.path_coordinates
+            : [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
           const isProposed = seg.category === 'proposed';
           const isMissing = seg.material === 'belum_ada';
           
