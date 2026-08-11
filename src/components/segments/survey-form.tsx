@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { CreateSegmentInput } from '@/services/segments/create-segment';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/lib/supabase/client';
 import { Loader2, FileImage } from 'lucide-react';
@@ -13,7 +14,7 @@ const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_
 export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess: (input: CreateSegmentInput, updateId?: string) => void; surveyorId?: string; segments?: DrainageSegment[]; }) {
   const [mode, setMode] = useState<'create' | 'update'>('create');
   const [selectedId, setSelectedId] = useState('');
-  const [form, setForm] = useState({ name: '', category: 'existing' as any, material: 'pasangan_batu' as any, condition: 'baik' as any, lengthM: '', widthCm: '', depthCm: '' });
+  const [form, setForm] = useState({ name: '', description: '', category: 'existing' as any, material: 'pasangan_batu' as any, condition: 'baik' as any, lengthM: '', widthCm: '', depthCm: '' });
   const [coords, setCoords] = useState({ startLat: '', startLng: '', endLat: '', endLng: '' });
   const [fileName, setFileName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
     const s = segments.find(x => x.id === id);
     if (!s) return;
     setSelectedId(id);
-    setForm({ name: s.name, category: s.category || 'existing', material: s.material, condition: s.condition, lengthM: String(s.length_m), widthCm: String(s.width_cm), depthCm: String(s.depth_cm) });
+    setForm({ name: s.name, description: s.description || '', category: s.category || 'existing', material: s.material, condition: s.condition, lengthM: String(s.length_m), widthCm: String(s.width_cm), depthCm: String(s.depth_cm) });
     setCoords({ startLat: String(s.start_lat || ''), startLng: String(s.start_lng || ''), endLat: String(s.end_lat || ''), endLng: String(s.end_lng || '') });
   };
   const getDeviceLocation = (type: 'start' | 'end') => {
@@ -48,7 +49,7 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
       const fileInput = document.getElementById('photo-upload') as HTMLInputElement;
       const photoUrl = fileInput?.files?.[0] ? (await handlePhotoUpload(fileInput.files[0])) || '' : '';
       onSuccess({
-        name: form.name, material: form.material, condition: form.condition, category: form.category,
+        name: form.name, description: form.description || undefined, material: form.material, condition: form.condition, category: form.category,
         length_m: parseFloat(form.lengthM), width_cm: parseFloat(form.widthCm), depth_cm: parseFloat(form.depthCm),
         start_lat: parseFloat(coords.startLat), start_lng: parseFloat(coords.startLng), end_lat: parseFloat(coords.endLat), end_lng: parseFloat(coords.endLng),
         photo_url: photoUrl || undefined, gps_source: 'device_gps', surveyor_id: surveyorId,
@@ -65,7 +66,7 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
       <div className="grid grid-cols-2 gap-3 bg-slate-50/50 p-2 rounded-lg border border-slate-150">
         <div>
           <label className="text-[9px] font-bold text-slate-500 uppercase">Mode Form</label>
-          <Select value={mode} onValueChange={(val: any) => { setMode(val); setSelectedId(''); setForm({ name: '', category: 'existing', material: 'pasangan_batu', condition: 'baik', lengthM: '', widthCm: '', depthCm: '' }); setCoords({ startLat: '', startLng: '', endLat: '', endLng: '' }); }}>
+          <Select value={mode} onValueChange={(val: any) => { setMode(val); setSelectedId(''); setForm({ name: '', description: '', category: 'existing', material: 'pasangan_batu', condition: 'baik', lengthM: '', widthCm: '', depthCm: '' }); setCoords({ startLat: '', startLng: '', endLat: '', endLng: '' }); }}>
             <SelectTrigger className="w-full text-xs h-8 bg-white"><SelectValue /></SelectTrigger>
             <SelectContent><SelectItem value="create">Baru</SelectItem><SelectItem value="update">Perbarui</SelectItem></SelectContent>
           </Select>
@@ -82,6 +83,7 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
       </div>
 
       <Input placeholder="Nama Segmen (contoh: Jl. Gajah Mada Segmen A)" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="h-9 bg-slate-50/20" required />
+      <Textarea placeholder="Deskripsi / catatan tambahan (opsional)" value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} className="resize-none text-xs bg-slate-50/20 min-h-[60px]" rows={2} />
       
       <div className="grid grid-cols-3 gap-3">
         {([
