@@ -24,3 +24,6 @@ export const conditionLabels: Record<string, string> = {
   rusak_berat: 'Rusak Berat',
   tersumbat: 'Tersumbat',
 };
+
+export const centerLat = -1.9450;
+export const centerLng = 124.3790;

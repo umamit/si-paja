@@ -8,7 +8,7 @@ import { DrainageSegment } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { useFlowRouting, EnrichedSegment } from '@/hooks/use-flow-routing';
 
-import { fixLeafletIcon, conditionColors, conditionLabels } from './map-utils';
+import { fixLeafletIcon, conditionColors, conditionLabels, centerLat, centerLng } from './map-utils';
 
 interface MapCoreProps { segments: DrainageSegment[]; }
 
@@ -19,11 +19,10 @@ export function MapCore({ segments }: MapCoreProps) {
 
   useEffect(() => {
     fixLeafletIcon();
-    if (typeof window !== 'undefined') setRainIntensity(Number(localStorage.getItem('pupr_rain_intensity')) || 110);
+    setRainIntensity(Number(localStorage.getItem('pupr_rain_intensity')) || 110);
   }, []);
 
   const routedSegments = useFlowRouting(segments, rainIntensity);
-  const centerLat = -1.9450, centerLng = 124.3790;
 
   return (
     <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 shadow-inner relative">
@@ -133,7 +132,16 @@ export function MapCore({ segments }: MapCoreProps) {
           );
         })}
 
-        <MarkerClusterGroup>{segments.map((seg) => <Marker key={`marker-${seg.id}`} position={[seg.start_lat, seg.start_lng]} />)}</MarkerClusterGroup>
+        <MarkerClusterGroup>
+          {segments.map((seg) => {
+            const isRev = (seg.start_elevation_m ?? 0) < (seg.end_elevation_m ?? 0);
+            const p = seg.path_coordinates;
+            const pos: [number, number] = p && p.length > 0
+              ? (isRev ? p[p.length - 1] : p[0])
+              : (isRev ? [seg.end_lat, seg.end_lng] : [seg.start_lat, seg.start_lng]);
+            return <Marker key={`marker-${seg.id}`} position={pos} />;
+          })}
+        </MarkerClusterGroup>
       </MapContainer>
     </div>
   );
