@@ -67,9 +67,9 @@ export default function MapPage() {
                 {/* Legend Klasifikasi Saluran */}
                 <div className="flex items-center flex-wrap gap-x-3 gap-y-1 text-slate-500">
                   <span className="text-[10px] font-bold text-slate-400 uppercase mr-1">Tipe:</span>
-                  <span className="flex items-center gap-1.5"><span className="h-[5px] w-4.5 bg-slate-450 rounded-sm" />Primer</span>
-                  <span className="flex items-center gap-1.5"><span className="h-[3px] w-4.5 bg-slate-450 rounded-sm" />Sekunder</span>
-                  <span className="flex items-center gap-1.5"><span className="h-[1.5px] w-4.5 bg-slate-450 rounded-sm" />Tersier</span>
+                  <span className="flex items-center gap-1.5"><span className="h-[5px] w-4 bg-slate-500 rounded-sm" />Primer (≥150cm)</span>
+                  <span className="flex items-center gap-1.5"><span className="h-[3px] w-4 bg-slate-500 rounded-sm" />Sekunder (50-149cm)</span>
+                  <span className="flex items-center gap-1.5"><span className="h-[1.5px] w-4 bg-slate-500 rounded-sm" />Tersier (&lt;50cm)</span>
                 </div>
               </div>
             </CardTitle>

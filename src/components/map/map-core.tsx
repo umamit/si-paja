@@ -1,27 +1,22 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Polyline, Popup, Marker, Circle } from 'react-leaflet';
+import { MapContainer, TileLayer, Polyline, Popup, Marker, Circle, Tooltip } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DrainageSegment } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { useFlowRouting, EnrichedSegment } from '@/hooks/use-flow-routing';
-
 import { fixLeafletIcon, conditionColors, conditionLabels, centerLat, centerLng } from './map-utils';
-
 interface MapCoreProps { segments: DrainageSegment[]; }
-
 export function MapCore({ segments }: MapCoreProps) {
   const [showHotspots, setShowHotspots] = useState(false);
   const [showFlowRouting, setShowFlowRouting] = useState(false);
   const [rainIntensity, setRainIntensity] = useState(110);
-
   useEffect(() => {
     fixLeafletIcon();
     setRainIntensity(Number(localStorage.getItem('pupr_rain_intensity')) || 110);
   }, []);
-
   const routedSegments = useFlowRouting(segments, rainIntensity);
 
   return (
@@ -105,6 +100,9 @@ export function MapCore({ segments }: MapCoreProps) {
 
           return (
             <Polyline key={seg.id} positions={positions} pathOptions={{ color, weight, opacity: 0.8, dashArray }}>
+              <Tooltip sticky className="text-[10px] font-bold px-2 py-1 rounded-md border border-slate-200/80 bg-white/95 text-slate-800 shadow-sm">
+                {seg.name} ({typeLabel})
+              </Tooltip>
               <Popup>
                 <div className="p-1 space-y-2 max-w-xs animate-fade-in text-slate-850">
                   <h4 className="font-bold text-slate-900 border-b pb-1 text-sm">{seg.name}</h4>
