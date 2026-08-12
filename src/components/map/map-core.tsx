@@ -10,10 +10,8 @@ import { useFlowRouting, EnrichedSegment } from '@/hooks/use-flow-routing';
 import { fixLeafletIcon, conditionColors, conditionLabels, centerLat, centerLng } from './map-utils';
 interface MapCoreProps { segments: DrainageSegment[]; }
 export function MapCore({ segments }: MapCoreProps) {
-  const [showHotspots, setShowHotspots] = useState(false);
-  const [showFlowRouting, setShowFlowRouting] = useState(false);
-  const [rainIntensity, setRainIntensity] = useState(110);
-  const [catchmentWidth, setCatchmentWidth] = useState(15);
+  const [showHotspots, setShowHotspots] = useState(false), [showFlowRouting, setShowFlowRouting] = useState(false);
+  const [rainIntensity, setRainIntensity] = useState(110), [catchmentWidth, setCatchmentWidth] = useState(15);
   useEffect(() => {
     fixLeafletIcon();
     setRainIntensity(Number(localStorage.getItem('pupr_rain_intensity')) || 110);
@@ -41,7 +39,13 @@ export function MapCore({ segments }: MapCoreProps) {
           const elevStart = seg.start_elevation_m ?? 0, elevEnd = seg.end_elevation_m ?? 0, dElev = elevStart - elevEnd;
           const slope = seg.length_m > 0 ? (Math.abs(dElev) / seg.length_m) * 100 : 0;
           const C = { beton_precast: 0.85, pasangan_batu: 0.75, tanah: 0.50, belum_ada: 0.90, lainnya: 0.70 }[seg.material] || 0.7;
-          const Q_r = 0.278 * C * rainIntensity * ((seg.length_m * catchmentWidth) / 1000000), Q_m = 0.85 * ((seg.width_cm / 100) * (seg.depth_cm / 100));
+          const Q_r = 0.278 * C * rainIntensity * ((seg.length_m * catchmentWidth) / 1000000);
+          const slopeVal = Math.max(slope / 100, 0.0001);
+          const n_val = { beton_precast: 0.013, pasangan_batu: 0.017, tanah: 0.025, belum_ada: 0.015, lainnya: 0.020 }[seg.material] || 0.017;
+          const B = seg.width_cm / 100, H = seg.depth_cm / 100;
+          const A_c = B * H, P = B + (2 * H), R = P > 0 ? A_c / P : 0;
+          const V_m = R > 0 ? (1 / n_val) * Math.pow(R, 2/3) * Math.sqrt(slopeVal) : 0;
+          const Q_m = V_m * A_c;
           const reasons = [
             (seg.condition === 'tersumbat' || seg.condition === 'rusak_berat') && (seg.condition === 'tersumbat' ? 'Saluran Tersumbat' : 'Kerusakan Fisik Berat'),
             Q_r > Q_m && 'Debit Limpasan Melebihi Kapasitas (Luapan)',
@@ -84,11 +88,8 @@ export function MapCore({ segments }: MapCoreProps) {
 
         {(showFlowRouting ? routedSegments : (segments as EnrichedSegment[])).map((seg) => {
           const positions: [number, number][] = seg.path_coordinates && seg.path_coordinates.length > 0
-            ? seg.path_coordinates
-            : [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
-          const isProposed = seg.category === 'proposed';
-          const isMissing = seg.material === 'belum_ada';
-          
+            ? seg.path_coordinates : [[seg.start_lat, seg.start_lng], [seg.end_lat, seg.end_lng]];
+          const isProposed = seg.category === 'proposed', isMissing = seg.material === 'belum_ada';
           let color = isProposed ? '#a855f7' : (isMissing ? '#ef4444' : (conditionColors[seg.condition] || '#64748b'));
           let weight = seg.width_cm >= 150 ? 6.0 : (seg.width_cm >= 50 ? 4.0 : 2.5);
 
@@ -134,11 +135,8 @@ export function MapCore({ segments }: MapCoreProps) {
 
         <MarkerClusterGroup>
           {segments.map((seg) => {
-            const isRev = (seg.start_elevation_m ?? 0) < (seg.end_elevation_m ?? 0);
-            const p = seg.path_coordinates;
-            const pos: [number, number] = p && p.length > 0
-              ? (isRev ? p[p.length - 1] : p[0])
-              : (isRev ? [seg.end_lat, seg.end_lng] : [seg.start_lat, seg.start_lng]);
+            const isRev = (seg.start_elevation_m ?? 0) < (seg.end_elevation_m ?? 0), p = seg.path_coordinates;
+            const pos: [number, number] = p && p.length > 0 ? (isRev ? p[p.length - 1] : p[0]) : (isRev ? [seg.end_lat, seg.end_lng] : [seg.start_lat, seg.start_lng]);
             return <Marker key={`marker-${seg.id}`} position={pos} />;
           })}
         </MarkerClusterGroup>

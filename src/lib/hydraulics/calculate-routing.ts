@@ -20,42 +20,42 @@ const RUNOFF_COEFFS: Record<string, number> = {
   lainnya: 0.70,
 };
 
+const MANNING_N: Record<string, number> = {
+  beton_precast: 0.013, pasangan_batu: 0.017, tanah: 0.025, belum_ada: 0.015, lainnya: 0.020
+};
+
 export function calculateRouting(
   segments: DrainageSegment[],
   graph: NetworkGraph,
-  rainIntensity: number
+  rainIntensity: number,
+  catchmentWidth: number
 ): Record<string, RoutedSegmentResult> {
   const { adjacencyList, directions } = graph;
   const results: Record<string, RoutedSegmentResult> = {};
 
-  // 1. Hitung Q_lokal, Q_max, dan kemiringan (slope) untuk setiap segmen
   const Q_lokal_map: Record<string, number> = {};
   const Q_max_map: Record<string, number> = {};
   const slope_map: Record<string, { percent: number; adverse: boolean; critical: boolean }> = {};
 
   segments.forEach(seg => {
-    // Q_lokal = 0.278 * C * I * A
     const C = RUNOFF_COEFFS[seg.material] || 0.7;
-    const catchmentArea = (seg.length_m * 15) / 1000000; // Lebar tangkapan diasumsikan 15m
-    const Q_lokal = 0.278 * C * rainIntensity * catchmentArea;
+    const Q_lokal = 0.278 * C * rainIntensity * ((seg.length_m * catchmentWidth) / 1000000);
     Q_lokal_map[seg.id] = Q_lokal;
 
-    // Q_max = V * B * H
-    const B = seg.width_cm / 100;
-    const H = seg.depth_cm / 100;
-    const V = 0.85; // Kecepatan aliran rata-rata
-    Q_max_map[seg.id] = V * B * H;
-
-    // Topografi & Elevasi
-    const elevStart = seg.start_elevation_m ?? 0;
-    const elevEnd = seg.end_elevation_m ?? 0;
-    const dElev = elevStart - elevEnd;
+    const B = seg.width_cm / 100, H = seg.depth_cm / 100;
+    const n_val = MANNING_N[seg.material] || 0.017;
+    const elevStart = seg.start_elevation_m ?? 0, elevEnd = seg.end_elevation_m ?? 0, dElev = elevStart - elevEnd;
     const slopePercent = seg.length_m > 0 ? (Math.abs(dElev) / seg.length_m) * 100 : 0;
+    const slopeVal = Math.max(slopePercent / 100, 0.0001);
+
+    const A_c = B * H, P = B + (2 * H), R = P > 0 ? A_c / P : 0;
+    const V = R > 0 ? (1 / n_val) * Math.pow(R, 2/3) * Math.sqrt(slopeVal) : 0;
+    Q_max_map[seg.id] = V * A_c;
 
     slope_map[seg.id] = {
       percent: slopePercent,
-      adverse: dElev < 0, // Aliran terbalik
-      critical: slopePercent < 0.1 && seg.length_m > 0, // Terlalu datar
+      adverse: dElev < 0,
+      critical: slopePercent < 0.05 && seg.length_m > 0,
     };
   });
 

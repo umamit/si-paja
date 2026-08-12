@@ -12,8 +12,11 @@ export function useFlowRouting(segments: DrainageSegment[], rainIntensity: numbe
     if (!segments || segments.length === 0) return [];
     
     try {
+      const catchmentWidth = typeof window !== 'undefined'
+        ? Number(localStorage.getItem('pupr_catchment_width')) || 15
+        : 15;
       const graph = buildNetwork(segments);
-      const routingResults = calculateRouting(segments, graph, rainIntensity);
+      const routingResults = calculateRouting(segments, graph, rainIntensity, catchmentWidth);
 
       return segments.map(seg => {
         const result = routingResults[seg.id] || {

@@ -22,19 +22,24 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
 
   const elevStart = segment.start_elevation_m ?? 0, elevEnd = segment.end_elevation_m ?? 0, deltaElev = elevStart - elevEnd;
   const slopePercent = segment.length_m > 0 ? (Math.abs(deltaElev) / segment.length_m) * 100 : 0;
-  const S_val = Math.max(slopePercent / 100, 0.001);
+  const S_val = Math.max(slopePercent / 100, 0.0001);
   const runOffCoeff: Record<string, number> = { beton_precast: 0.85, pasangan_batu: 0.75, tanah: 0.50, belum_ada: 0.90, lainnya: 0.70 };
   const C = runOffCoeff[segment.material] || 0.7;
   const Q_rencana = 0.278 * C * rainIntensity * ((segment.length_m * catchmentWidth) / 1000000);
-  const B = segment.width_cm / 100, H = segment.depth_cm / 100, V = 0.85;
-  const Q_aktual = V * (B * H);
-  const isSafe = Q_aktual >= Q_rencana;
-  const h = Math.min(Q_rencana / (V * B), H);
-  const freeboard = Math.max(H - h, 0);
-
-  // Kalkulasi Ilmiah Dimensi Rekomendasi (Manning Best Hydraulic Section)
+  
   const manning_n: Record<string, number> = { beton_precast: 0.013, pasangan_batu: 0.017, tanah: 0.025, belum_ada: 0.015, lainnya: 0.020 };
   const n_val = manning_n[segment.material] || 0.017;
+  const B = segment.width_cm / 100, H = segment.depth_cm / 100;
+  const A_c = B * H, P = B + (2 * H), R = P > 0 ? A_c / P : 0;
+  const V_aktual = R > 0 ? (1 / n_val) * Math.pow(R, 2/3) * Math.sqrt(S_val) : 0;
+  const Q_aktual = V_aktual * A_c;
+  
+  const isSafe = Q_aktual >= Q_rencana;
+  const h = Math.min(Q_rencana / (Math.max(V_aktual, 0.1) * B), H);
+  const freeboard = Math.max(H - h, 0);
+  const isSiltRisk = V_aktual < 0.6 && segment.length_m > 0;
+
+  // Kalkulasi Ilmiah Dimensi Rekomendasi (Manning Best Hydraulic Section)
   const h_rec = Math.pow((Q_rencana * n_val * Math.pow(2, 2/3)) / (2 * Math.sqrt(S_val)), 3/8);
   const B_rec_cm = Math.ceil(h_rec * 2 * 100);
   const f_rec = Math.min(Math.max(Math.sqrt(0.5 * h_rec), 0.15), 0.30);
@@ -67,7 +72,7 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
         <div className="grid grid-cols-3 gap-x-2 gap-y-2 text-[10px] text-slate-650 bg-white p-2.5 rounded-lg border border-slate-100">
           <div><p className="text-slate-400 font-semibold">Lebar parit (B)</p><p className="font-mono font-bold text-slate-800">{B.toFixed(2)} m</p></div>
           <div><p className="text-slate-400 font-semibold">Dalam parit (H)</p><p className="font-mono font-bold text-slate-800">{H.toFixed(2)} m</p></div>
-          <div><p className="text-slate-400 font-semibold">Kemiringan (S)</p><p className="font-mono font-bold text-slate-800">{(S_val).toFixed(4)}</p></div>
+          <div><p className="text-slate-400 font-semibold">Kecepatan (V)</p><p className="font-mono font-bold text-slate-800">{V_aktual.toFixed(2)} m/s</p></div>
           <div className="pt-1.5 border-t border-slate-50"><p className="text-slate-400 font-semibold">Tinggi air (h)</p><p className="font-mono font-bold text-blue-600">{h.toFixed(2)} m</p></div>
           <div className="pt-1.5 border-t border-slate-50"><p className="text-slate-400 font-semibold">Tinggi Jagaan</p><p className={`font-mono font-bold ${freeboard <= 0.1 ? 'text-rose-600 font-extrabold' : 'text-emerald-700'}`}>{freeboard.toFixed(2)} m</p></div>
           <div className="pt-1.5 border-t border-slate-50"><p className="text-slate-400 font-semibold">Daya Tampung</p><p className={`font-bold ${isSafe ? 'text-emerald-700' : 'text-rose-600'}`}>{isSafe ? 'Mencukupi' : 'Kelebihan'}</p></div>
@@ -78,7 +83,7 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
           <div className="bg-white p-2 rounded border"><p className="text-slate-400 font-medium">Kapasitas Maks (Qmax)</p><p className="font-mono text-xs font-bold text-slate-850">{Q_aktual.toFixed(4)} m³/s</p></div>
         </div>
 
-        <div className="text-[11px] pt-1">
+        <div className="text-[11px] pt-1 space-y-1.5">
           {isSafe ? (
             <div className="flex items-start gap-1.5 p-2 bg-emerald-50 text-emerald-800 rounded border border-emerald-100">
               <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" /><p>Aman. Tinggi jagaan <strong>({freeboard.toFixed(2)}m)</strong> mencukupi.</p>
@@ -86,6 +91,12 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
           ) : (
             <div className="flex items-start gap-1.5 p-2 bg-rose-50 text-rose-800 rounded border border-rose-100">
               <AlertTriangle className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" /><p>Rawan. Luapan setinggi <strong>{Math.abs(H-h).toFixed(2)}m</strong> di atas bibir parit!</p>
+            </div>
+          )}
+          {isSiltRisk && (
+            <div className="flex items-start gap-1.5 p-2 bg-amber-50 text-amber-900 rounded border border-amber-200">
+              <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
+              <p>⚠️ <strong>Rawan Sedimentasi:</strong> Kecepatan aliran air basah ({V_aktual.toFixed(2)} m/s) di bawah batas aman swa-pembersih (0.60 m/s), lumpur mudah mengendap.</p>
             </div>
           )}
         </div>
