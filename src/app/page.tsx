@@ -49,7 +49,7 @@ export default function LoginPage() {
           {/* Logo container wrapper for high visibility */}
           <div className="bg-white p-1 rounded-xl shadow-lg border border-slate-100 max-w-[145px] mb-4 hover:scale-105 transition-transform duration-300">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-sipaja.jpg" alt="SI-PAJA Logo" className="w-full h-auto object-contain rounded-lg" />
+            <img src="/logo-sipaja-emblem.png" alt="SI-PAJA Logo" className="w-full h-auto object-contain rounded-lg" />
           </div>
           <h2 className="text-center text-2xl font-black tracking-wider text-white uppercase">
             SI-PAJA
