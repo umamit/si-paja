@@ -47,9 +47,9 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 border-t-4 border-t-[#ffcc00] p-10 rounded-2xl shadow-2xl relative z-10 transition-all duration-300 hover:shadow-emerald-500/5">
         <div className="flex flex-col items-center mb-8">
           {/* Logo container wrapper for high visibility */}
-          <div className="bg-white p-3.5 rounded-xl shadow-lg border border-slate-100 max-w-[200px] mb-4 hover:scale-105 transition-transform duration-300">
+          <div className="bg-white p-1 rounded-xl shadow-lg border border-slate-100 max-w-[145px] mb-4 hover:scale-105 transition-transform duration-300">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-pupr.png" alt="PUPR Logo" className="w-full h-auto object-contain" />
+            <img src="/logo-sipaja.jpg" alt="SI-PAJA Logo" className="w-full h-auto object-contain rounded-lg" />
           </div>
           <h2 className="text-center text-2xl font-black tracking-wider text-white uppercase">
             SI-PAJA

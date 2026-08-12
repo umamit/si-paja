@@ -70,7 +70,7 @@ export function Sidebar() {
         isCollapsed ? 'justify-center' : 'justify-start'
       }`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-pupr.png" alt="PUPR" className="h-8 w-auto shrink-0" />
+        <img src="/logo-sipaja.jpg" alt="SI-PAJA" className="h-8 w-8 object-cover rounded-md shrink-0" />
         
         {!isCollapsed && (
           <div className="flex-1 min-w-0 transition-opacity duration-200">
