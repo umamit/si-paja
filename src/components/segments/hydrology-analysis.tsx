@@ -10,10 +10,14 @@ interface HydrologyAnalysisProps { segment: DrainageSegment; }
 
 export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
   const [rainIntensity, setRainIntensity] = useState(110);
+  const [catchmentWidth, setCatchmentWidth] = useState(15);
   const [viewTab, setViewTab] = useState<'aktual' | 'rencana'>('aktual');
 
   useEffect(() => {
-    if (typeof window !== 'undefined') setRainIntensity(Number(localStorage.getItem('pupr_rain_intensity')) || 110);
+    if (typeof window !== 'undefined') {
+      setRainIntensity(Number(localStorage.getItem('pupr_rain_intensity')) || 110);
+      setCatchmentWidth(Number(localStorage.getItem('pupr_catchment_width')) || 15);
+    }
   }, []);
 
   const elevStart = segment.start_elevation_m ?? 0, elevEnd = segment.end_elevation_m ?? 0, deltaElev = elevStart - elevEnd;
@@ -21,7 +25,7 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
   const S_val = Math.max(slopePercent / 100, 0.001);
   const runOffCoeff: Record<string, number> = { beton_precast: 0.85, pasangan_batu: 0.75, tanah: 0.50, belum_ada: 0.90, lainnya: 0.70 };
   const C = runOffCoeff[segment.material] || 0.7;
-  const Q_rencana = 0.278 * C * rainIntensity * ((segment.length_m * 15) / 1000000);
+  const Q_rencana = 0.278 * C * rainIntensity * ((segment.length_m * catchmentWidth) / 1000000);
   const B = segment.width_cm / 100, H = segment.depth_cm / 100, V = 0.85;
   const Q_aktual = V * (B * H);
   const isSafe = Q_aktual >= Q_rencana;

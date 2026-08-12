@@ -1,15 +1,11 @@
 'use client';
 import { useState } from 'react';
 import { CreateSegmentInput } from '@/services/segments/create-segment';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button'; import { Input } from '@/components/ui/input'; import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { supabase } from '@/lib/supabase/client';
-import { Loader2, FileImage } from 'lucide-react';
+import { supabase } from '@/lib/supabase/client'; import { Loader2, FileImage } from 'lucide-react';
 import { DrainageSegment } from '@/types';
-import { useCoordElevation } from '@/hooks/use-coord-elevation';
-import { CoordInput } from './coord-input';
+import { useCoordElevation } from '@/hooks/use-coord-elevation'; import { CoordInput } from './coord-input'; import { compressImage } from '@/lib/image-compression';
 const isPlaceholder = !process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
 export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess: (input: CreateSegmentInput, updateId?: string) => void; surveyorId?: string; segments?: DrainageSegment[]; }) {
   const [mode, setMode] = useState<'create' | 'update'>('create');
@@ -28,17 +24,17 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
     setCoords({ startLat: String(s.start_lat || ''), startLng: String(s.start_lng || ''), endLat: String(s.end_lat || ''), endLng: String(s.end_lng || '') });
   };
   const getDeviceLocation = (type: 'start' | 'end') => {
-    navigator.geolocation?.getCurrentPosition((pos) => {
-      const lat = pos.coords.latitude.toFixed(6);
-      const lng = pos.coords.longitude.toFixed(6);
+    navigator.geolocation?.getCurrentPosition(async (pos) => {
+      const lat = pos.coords.latitude.toFixed(6), lng = pos.coords.longitude.toFixed(6);
       setCoords((prev) => ({ ...prev, [type === 'start' ? 'startLat' : 'endLat']: lat, [type === 'start' ? 'startLng' : 'endLng']: lng }));
       fetchElev(type, lat, lng);
     });
   };
   const handlePhotoUpload = async (file: File) => {
     if (isPlaceholder) return URL.createObjectURL(file);
-    const path = `segments/${Date.now()}.${file.name.split('.').pop()}`;
-    const { error } = await supabase.storage.from('drainage-photos').upload(path, file);
+    const compressed = await compressImage(file);
+    const path = `segments/${Date.now()}.jpg`;
+    const { error } = await supabase.storage.from('drainage-photos').upload(path, compressed);
     if (error) throw error;
     return supabase.storage.from('drainage-photos').getPublicUrl(path).data.publicUrl;
   };

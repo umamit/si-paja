@@ -6,7 +6,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Eye, Trash2 } from 'lucide-react';
+import { Eye, Trash2, Download } from 'lucide-react';
+import { exportToKML, exportToGeoJSON, exportToCSV } from '@/lib/gis-export';
 
 interface SegmentTableProps {
   segments: DrainageSegment[];
@@ -34,25 +35,39 @@ export function SegmentTable({ segments, onViewDetails, onDelete, isAdmin }: Seg
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Input
-          placeholder="Cari segmen jalan..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-grow max-w-sm bg-white"
-        />
-        <Select value={conditionFilter} onValueChange={(val) => setConditionFilter(val || 'all')}>
-          <SelectTrigger className="w-[180px] bg-white">
-            <SelectValue placeholder="Semua Kondisi" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Semua Kondisi</SelectItem>
-            <SelectItem value="baik">Baik</SelectItem>
-            <SelectItem value="rusak_ringan">Rusak Ringan</SelectItem>
-            <SelectItem value="rusak_berat">Rusak Berat</SelectItem>
-            <SelectItem value="tersumbat">Tersumbat</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+        <div className="flex flex-col sm:flex-row gap-3 flex-grow max-w-lg w-full">
+          <Input
+            placeholder="Cari segmen jalan..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="flex-grow bg-white"
+          />
+          <Select value={conditionFilter} onValueChange={(val) => setConditionFilter(val || 'all')}>
+            <SelectTrigger className="w-[180px] bg-white">
+              <SelectValue placeholder="Semua Kondisi" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Kondisi</SelectItem>
+              <SelectItem value="baik">Baik</SelectItem>
+              <SelectItem value="rusak_ringan">Rusak Ringan</SelectItem>
+              <SelectItem value="rusak_berat">Rusak Berat</SelectItem>
+              <SelectItem value="tersumbat">Tersumbat</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex gap-2 w-full sm:w-auto justify-end">
+          <button onClick={() => exportToKML(filtered)} className="h-9 px-3 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 shadow-sm transition-all" title="Unduh KML Google Earth">
+            <Download className="h-3.5 w-3.5" />KML
+          </button>
+          <button onClick={() => exportToGeoJSON(filtered)} className="h-9 px-3 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 shadow-sm transition-all" title="Unduh GeoJSON GIS">
+            <Download className="h-3.5 w-3.5" />GeoJSON
+          </button>
+          <button onClick={() => exportToCSV(filtered)} className="h-9 px-3 rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 shadow-sm transition-all" title="Unduh Rekap CSV Excel">
+            <Download className="h-3.5 w-3.5" />CSV
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">

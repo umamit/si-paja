@@ -4,10 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getProfile } from '@/services/auth/get-profile';
 import { AppLayout } from '@/components/shared/layout';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button'; import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'; import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/lib/supabase/client';
 import { User, Database, Calculator, Save, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -22,15 +20,12 @@ export default function SettingsPage() {
   const [fullName, setFullName] = useState('');
   const [shs, setShs] = useState({ cleaning: '120000', majorRepair: '2200000', minorRepair: '850000' });
   const [rainIntensity, setRainIntensity] = useState('110');
+  const [catchmentWidth, setCatchmentWidth] = useState('15');
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    getProfile().then((p) => {
-      if (!p) { router.push('/'); return; }
-      setProfile(p);
-      setFullName(p.full_name);
-    }).catch(console.error).finally(() => setFetching(false));
+    getProfile().then((p) => { if (!p) { router.push('/'); return; } setProfile(p); setFullName(p.full_name); }).catch(console.error).finally(() => setFetching(false));
 
     if (typeof window !== 'undefined') {
       const storedShs = localStorage.getItem('pupr_shs');
@@ -39,6 +34,8 @@ export default function SettingsPage() {
       }
       const storedRain = localStorage.getItem('pupr_rain_intensity');
       if (storedRain) setRainIntensity(storedRain);
+      const storedWidth = localStorage.getItem('pupr_catchment_width');
+      if (storedWidth) setCatchmentWidth(storedWidth);
     }
   }, [router]);
 
@@ -60,6 +57,7 @@ export default function SettingsPage() {
       }
       localStorage.setItem('pupr_shs', JSON.stringify(shs));
       localStorage.setItem('pupr_rain_intensity', rainIntensity);
+      localStorage.setItem('pupr_catchment_width', catchmentWidth);
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
       alert('Pengaturan berhasil disimpan!');
     } catch (err) {
@@ -109,10 +107,17 @@ export default function SettingsPage() {
                   <Input type="number" value={shs.majorRepair} onChange={(e) => setShs({ ...shs, majorRepair: e.target.value })} className="h-9.5 text-xs" required />
                 </div>
               </div>
-              <div className="border-t border-slate-100 pt-3.5 space-y-1.5">
-                <label className="text-[9px] font-bold text-slate-400 uppercase">Intensitas Hujan Rencana (I) (mm/jam)</label>
-                <div className="max-w-[200px]"><Input type="number" value={rainIntensity} onChange={(e) => setRainIntensity(e.target.value)} className="h-9.5 text-xs" required /></div>
-                <p className="text-[8.5px] text-slate-400 font-medium">Diperoleh dari Analisis Frekuensi Curah Hujan Rencana (Kala Ulang APBD/Masterplan Kota Bobong).</p>
+              <div className="grid grid-cols-2 gap-4 border-t border-slate-100 pt-3.5">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-400 uppercase">Intensitas Hujan Rencana (I) (mm/jam)</label>
+                  <Input type="number" value={rainIntensity} onChange={(e) => setRainIntensity(e.target.value)} className="h-9.5 text-xs" required />
+                  <p className="text-[8px] text-slate-400 font-medium leading-normal">Berdasarkan Analisis Curah Hujan Rencana (APBD/Masterplan Bobong).</p>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold text-slate-400 uppercase">Lebar Tangkapan Hujan (W) (meter)</label>
+                  <Input type="number" value={catchmentWidth} onChange={(e) => setCatchmentWidth(e.target.value)} className="h-9.5 text-xs" required />
+                  <p className="text-[8px] text-slate-400 font-medium leading-normal">Asumsi lebar rata-rata daerah tangkapan limpasan air hujan di kanan-kiri parit.</p>
+                </div>
               </div>
             </CardContent>
           </Card>

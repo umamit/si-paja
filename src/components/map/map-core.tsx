@@ -13,9 +13,11 @@ export function MapCore({ segments }: MapCoreProps) {
   const [showHotspots, setShowHotspots] = useState(false);
   const [showFlowRouting, setShowFlowRouting] = useState(false);
   const [rainIntensity, setRainIntensity] = useState(110);
+  const [catchmentWidth, setCatchmentWidth] = useState(15);
   useEffect(() => {
     fixLeafletIcon();
     setRainIntensity(Number(localStorage.getItem('pupr_rain_intensity')) || 110);
+    setCatchmentWidth(Number(localStorage.getItem('pupr_catchment_width')) || 15);
   }, []);
   const routedSegments = useFlowRouting(segments, rainIntensity);
 
@@ -39,7 +41,7 @@ export function MapCore({ segments }: MapCoreProps) {
           const elevStart = seg.start_elevation_m ?? 0, elevEnd = seg.end_elevation_m ?? 0, dElev = elevStart - elevEnd;
           const slope = seg.length_m > 0 ? (Math.abs(dElev) / seg.length_m) * 100 : 0;
           const C = { beton_precast: 0.85, pasangan_batu: 0.75, tanah: 0.50, belum_ada: 0.90, lainnya: 0.70 }[seg.material] || 0.7;
-          const Q_r = 0.278 * C * rainIntensity * ((seg.length_m * 15) / 1000000), Q_m = 0.85 * ((seg.width_cm / 100) * (seg.depth_cm / 100));
+          const Q_r = 0.278 * C * rainIntensity * ((seg.length_m * catchmentWidth) / 1000000), Q_m = 0.85 * ((seg.width_cm / 100) * (seg.depth_cm / 100));
           const reasons = [
             (seg.condition === 'tersumbat' || seg.condition === 'rusak_berat') && (seg.condition === 'tersumbat' ? 'Saluran Tersumbat' : 'Kerusakan Fisik Berat'),
             Q_r > Q_m && 'Debit Limpasan Melebihi Kapasitas (Luapan)',

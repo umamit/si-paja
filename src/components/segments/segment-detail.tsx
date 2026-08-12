@@ -14,6 +14,7 @@ import { LogList } from './log-list';
 import { AddLogDialog } from './add-log-dialog';
 import { PhotoComparison } from './photo-comparison';
 import { HydrologyAnalysis } from './hydrology-analysis';
+import { compressImage } from '@/lib/image-compression';
 
 interface SegmentDetailProps {
   segment: DrainageSegment | null;
@@ -51,9 +52,9 @@ export function SegmentDetail({ segment, isOpen, onClose }: SegmentDetailProps) 
     try {
       let photoUrl = '';
       if (!isPlaceholder) {
-        const fileExt = file.name.split('.').pop();
-        const filePath = `segments/${Date.now()}-after.${fileExt}`;
-        const { error } = await supabase.storage.from('drainage-photos').upload(filePath, file);
+        const compressed = await compressImage(file);
+        const filePath = `segments/${Date.now()}-after.jpg`;
+        const { error } = await supabase.storage.from('drainage-photos').upload(filePath, compressed);
         if (error) throw error;
         photoUrl = supabase.storage.from('drainage-photos').getPublicUrl(filePath).data.publicUrl;
       } else {
