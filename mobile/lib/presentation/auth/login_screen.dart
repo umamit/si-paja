@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../main.dart';
 
@@ -16,6 +17,20 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  void _loadSavedCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _emailController.text = prefs.getString('saved_email') ?? '';
+      _passwordController.text = prefs.getString('saved_password') ?? '';
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -24,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
-
     setState(() => _isLoading = true);
 
     try {
@@ -33,31 +47,18 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text,
       );
 
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('saved_email', _emailController.text);
+      await prefs.setString('saved_password', _passwordController.text);
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login Berhasil! Selamat datang di SI-PAJA.'),
-            backgroundColor: Color(0xFF10B981),
-          ),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login Berhasil!'), backgroundColor: Color(0xFF10B981)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Gagal Login: ${e.toString().replaceAll('Exception: ', '')}'),
-            backgroundColor: Colors.redAccent,
-          ),
-        );
-      }
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Gagal Login: ${e.toString().replaceAll('Exception: ', '')}'), backgroundColor: Colors.redAccent));
     } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -76,67 +77,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Icon(Icons.waves_rounded, size: 80, color: Color(0xFF10B981)),
                   const SizedBox(height: 16),
-                  const Text(
-                    'SI-PAJA TALIABU',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, letterSpacing: 1.5),
-                  ),
-                  const Text(
-                    'Sistem Informasi Pemetaan & Analisis Drainase',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
+                  const Text('SI-PAJA TALIABU', textAlign: TextAlign.center, style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, letterSpacing: 1.5)),
+                  const Text('Sistem Informasi Pemetaan & Analisis Drainase', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 12)),
                   const SizedBox(height: 40),
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      labelText: 'Email Surveyor',
-                      prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF10B981)),
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF10B981), width: 2)),
-                    ),
-                    validator: (val) {
-                      if (val == null || val.trim().isEmpty) return 'Email wajib diisi';
-                      if (!val.contains('@')) return 'Format email tidak valid';
-                      return null;
-                    },
+                    decoration: const InputDecoration(labelText: 'Email Surveyor', prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF10B981)), border: OutlineInputBorder()),
+                    validator: (v) => (v == null || !v.contains('@')) ? 'Email tidak valid' : null,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Kata Sandi',
-                      prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF10B981)),
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF10B981), width: 2)),
-                    ),
-                    validator: (val) {
-                      if (val == null || val.isEmpty) return 'Kata sandi wajib diisi';
-                      if (val.length < 6) return 'Sandi minimal 6 karakter';
-                      return null;
-                    },
+                    decoration: const InputDecoration(labelText: 'Kata Sandi', prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF10B981)), border: OutlineInputBorder()),
+                    validator: (v) => (v == null || v.length < 6) ? 'Sandi minimal 6 karakter' : null,
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: _isLoading ? null : _handleLogin,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF10B981),
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF10B981), foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
                     child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2),
-                          )
-                        : const Text(
-                            'MASUK',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
+                        ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2))
+                        : const Text('MASUK', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   ),
                 ],
               ),
