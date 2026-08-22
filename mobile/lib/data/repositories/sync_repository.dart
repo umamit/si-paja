@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path/path.dart' as p;
+import '../models/segment_model.dart';
 import 'local_db_repository.dart';
 
 class SyncRepository {
@@ -69,5 +70,22 @@ class SyncRepository {
     }
 
     return successCount;
+  }
+
+  /// Mengunduh data segmen drainase dari Supabase dan memperbarui cache SQLite lokal.
+  Future<void> downloadAndCacheSegments() async {
+    try {
+      final List<dynamic> response = await _client.from('drainage_segments').select();
+      for (final raw in response) {
+        final data = Map<String, dynamic>.from(raw);
+        // Tandai data dari server sebagai sudah tersinkronisasi
+        data['is_synced'] = 1;
+        
+        final segment = SegmentModel.fromMap(data);
+        await _localDb.insertSegment(segment);
+      }
+    } catch (e) {
+      // Abaikan jika tidak ada internet, data offline lama tetap aman digunakan
+    }
   }
 }

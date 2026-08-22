@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import '../../core/gps_tracker.dart';
 import '../../data/models/segment_model.dart';
 import '../../data/repositories/local_db_repository.dart';
+import '../../data/repositories/sync_repository.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -14,6 +15,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   final _localDb = LocalDbRepository();
+  final _syncRepo = SyncRepository();
   final _gpsTracker = GpsTracker();
   final _mapController = MapController();
   List<SegmentModel> _segments = [];
@@ -29,8 +31,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _loadSegments() async {
+    await _syncRepo.downloadAndCacheSegments();
     final data = await _localDb.getOfflineSegments();
-    setState(() => _segments = data);
+    if (mounted) setState(() => _segments = data);
   }
 
   Future<void> _initCurrentLocation() async {

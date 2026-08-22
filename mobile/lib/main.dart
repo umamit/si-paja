@@ -64,9 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void _triggerSync() async {
     setState(() => _isSyncing = true);
     final count = await _syncRepo.syncOfflineSegments();
+    await _syncRepo.downloadAndCacheSegments();
     await _checkUnsynced();
     setState(() => _isSyncing = false);
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(count > 0 ? '$count data berhasil disinkronkan!' : 'Semua data sudah sinkron.'), backgroundColor: const Color(0xFF10B981)));
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(count > 0 ? '$count data berhasil disinkronkan!' : 'Sinkronisasi selesai.'), backgroundColor: const Color(0xFF10B981)));
   }
 
   @override
