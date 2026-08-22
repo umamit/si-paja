@@ -5,6 +5,7 @@ import '../../core/gps_tracker.dart';
 import '../../data/models/segment_model.dart';
 import '../../data/repositories/local_db_repository.dart';
 import '../../data/repositories/sync_repository.dart';
+import '../survey/survey_form_screen.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -49,7 +50,24 @@ class _MapScreenState extends State<MapScreen> {
     if (_isTracking) {
       _gpsTracker.stopTracking();
       setState(() => _isTracking = false);
-      _loadSegments(); // Refresh map
+      if (_livePath.length >= 2) {
+        final save = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text('Simpan Jalur?'),
+            content: Text('Simpan hasil perekaman jalur ${_livePath.length} koordinat ke draf survei parit baru?'),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Batal')),
+              TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Simpan')),
+            ],
+          ),
+        );
+        if (save == true && mounted) {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => SurveyFormScreen(prefilledPath: _livePath))).then((_) => _loadSegments());
+        }
+      } else {
+        _loadSegments();
+      }
     } else {
       final success = await _gpsTracker.startTracking((path) {
         setState(() {

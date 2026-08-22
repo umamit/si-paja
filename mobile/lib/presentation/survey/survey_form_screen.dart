@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:uuid/uuid.dart';
 import '../../core/gps_tracker.dart';
 import '../../core/image_compressor.dart';
@@ -7,7 +8,8 @@ import '../../data/models/segment_model.dart';
 import '../../data/repositories/local_db_repository.dart';
 
 class SurveyFormScreen extends StatefulWidget {
-  const SurveyFormScreen({super.key});
+  final List<LatLng>? prefilledPath;
+  const SurveyFormScreen({super.key, this.prefilledPath});
 
   @override
   State<SurveyFormScreen> createState() => _SurveyFormScreenState();
@@ -23,8 +25,21 @@ class _SurveyFormScreenState extends State<SurveyFormScreen> {
 
   String _material = 'beton_precast', _condition = 'baik';
   double? _startLat, _startLng, _endLat, _endLng;
+  List<List<double>>? _pathCoordinates;
   String? _localPhotoPath;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.prefilledPath != null && widget.prefilledPath!.isNotEmpty) {
+      _startLat = widget.prefilledPath!.first.latitude;
+      _startLng = widget.prefilledPath!.first.longitude;
+      _endLat = widget.prefilledPath!.last.latitude;
+      _endLng = widget.prefilledPath!.last.longitude;
+      _pathCoordinates = widget.prefilledPath!.map((pt) => [pt.latitude, pt.longitude]).toList();
+    }
+  }
 
   void _capturePhoto() async {
     final photo = await _picker.pickImage(source: ImageSource.camera);
@@ -65,13 +80,14 @@ class _SurveyFormScreenState extends State<SurveyFormScreen> {
       startLng: _startLng!,
       endLat: _endLat!,
       endLng: _endLng!,
-      lengthM: 0.0, // Calculated on server or web
+      lengthM: 0.0,
       widthCm: double.parse(_widthCtrl.text),
       depthCm: double.parse(_depthCtrl.text),
       material: _material,
       condition: _condition,
       description: _descCtrl.text.isEmpty ? null : _descCtrl.text,
-      photoUrl: _localPhotoPath, // Temporary saved local path
+      photoUrl: _localPhotoPath,
+      pathCoordinates: _pathCoordinates,
       createdAt: DateTime.now().toIso8601String(),
       isSynced: false,
     );
