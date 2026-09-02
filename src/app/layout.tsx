@@ -4,6 +4,16 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "SI-PAJA Kabupaten Pulau Taliabu | Dinas PUPR",
   description: "Sistem Informasi Pemetaan & Analisis Jaringan Air (SI-PAJA) Kabupaten Pulau Taliabu - Dinas Pekerjaan Umum dan Penataan Ruang",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
 };
 
 export default function RootLayout({
