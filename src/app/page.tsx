@@ -53,8 +53,8 @@ export default function LoginPage() {
         <h1 className="text-3xl font-black tracking-wider text-white uppercase text-center">
           SI-PAJA
         </h1>
-        <p className="text-[10px] font-extrabold tracking-[0.25em] text-emerald-400 uppercase mt-0.5">
-          Sistem Informasi Drainase Bobong
+        <p className="text-[10px] font-extrabold tracking-[0.15em] text-emerald-400 uppercase mt-0.5 text-center">
+          Sistem Informasi Pemetaan dan Analisis Jaringan Drainase
         </p>
         <p className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase mt-1">
           Dinas PUPR &bull; Bidang Sumber Daya Air
