@@ -56,8 +56,8 @@ export default function LoginPage() {
         <p className="text-[10px] font-extrabold tracking-[0.15em] text-emerald-400 uppercase mt-0.5 text-center">
           Sistem Informasi Pemetaan dan Analisis Jaringan Drainase
         </p>
-        <p className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase mt-1">
-          Dinas PUPR &bull; Bidang Sumber Daya Air
+        <p className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase mt-1 text-center">
+          Dinas PUPR Kabupaten Pulau Taliabu &bull; Bidang Sumber Daya Air
         </p>
       </div>
 
