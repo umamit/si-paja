@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../main.dart';
 
@@ -14,6 +14,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController(), _passwordController = TextEditingController();
   final _authRepository = AuthRepository();
+  final _secureStorage = const FlutterSecureStorage();
   bool _isLoading = false;
 
   @override
@@ -23,11 +24,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _loadSavedCredentials() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _emailController.text = prefs.getString('saved_email') ?? '';
-      _passwordController.text = prefs.getString('saved_password') ?? '';
-    });
+    final savedEmail = await _secureStorage.read(key: 'saved_email');
+    final savedPassword = await _secureStorage.read(key: 'saved_password');
+    if (mounted) {
+      setState(() {
+        _emailController.text = savedEmail ?? '';
+        _passwordController.text = savedPassword ?? '';
+      });
+    }
   }
 
   @override
@@ -47,9 +51,8 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text,
       );
 
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('saved_email', _emailController.text);
-      await prefs.setString('saved_password', _passwordController.text);
+      await _secureStorage.write(key: 'saved_email', value: _emailController.text);
+      await _secureStorage.write(key: 'saved_password', value: _passwordController.text);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login Berhasil!'), backgroundColor: Color(0xFF10B981)));
