@@ -41,15 +41,24 @@ export function CostEstimator({ segment }: CostEstimatorProps) {
   let estimatedCost = 0;
   let workType = 'Tidak ada rekomendasi pekerjaan fisik';
 
-  if (segment.condition === 'tersumbat') {
+  if (segment.condition === 'tersumbat' || segment.condition === 'sedimentasi') {
     estimatedCost = volume * rates.cleaning;
-    workType = 'Normalisasi & Pengerukan Sedimen';
+    workType = 'Normalisasi & Pengerukan Sedimen / Sampah';
   } else if (segment.condition === 'rusak_berat') {
     estimatedCost = length * rates.majorRepair;
     workType = 'Rehabilitasi Total Dinding Saluran';
+  } else if (segment.condition === 'rusak_sedang') {
+    estimatedCost = length * (rates.majorRepair * 0.5);
+    workType = 'Perbaikan Struktur / Rekonstruksi Sebagian';
   } else if (segment.condition === 'rusak_ringan') {
     estimatedCost = length * rates.minorRepair;
     workType = 'Pemeliharaan Rutin / Tambal Sulam';
+  } else if (segment.condition === 'tutup_rusak') {
+    estimatedCost = length * (rates.minorRepair * 1.5);
+    workType = 'Penggantian Pelat Penutup Precast';
+  } else if (segment.condition === 'sedang_perbaikan') {
+    estimatedCost = 0;
+    workType = 'Dalam Tahap Pengerjaan Proyek';
   }
 
   const formatRupiah = (val: number) => {

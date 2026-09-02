@@ -15,13 +15,12 @@ export function StatsGrid({ segments }: StatsGridProps) {
   const existingLength = existingSegs.reduce((sum, seg) => sum + Number(seg.length_m), 0);
   const proposedLength = proposedSegs.reduce((sum, seg) => sum + Number(seg.length_m), 0);
 
-  const conditions = existingSegs.reduce(
-    (acc, seg) => {
-      acc[seg.condition] = (acc[seg.condition] || 0) + 1;
-      return acc;
-    },
-    { baik: 0, rusak_ringan: 0, rusak_berat: 0, tersumbat: 0 }
-  );
+  const conditions: Record<string, number> = {};
+  existingSegs.forEach((seg) => {
+    conditions[seg.condition] = (conditions[seg.condition] || 0) + 1;
+  });
+
+  const needsMaintenanceCount = existingSegs.filter((s) => s.condition !== 'baik').length;
 
   const stats = [
     {
@@ -40,14 +39,14 @@ export function StatsGrid({ segments }: StatsGridProps) {
     },
     {
       title: 'Kondisi Eksisting Baik',
-      value: `${conditions.baik} Segmen`,
-      desc: `${((conditions.baik / (existingSegs.length || 1)) * 100).toFixed(0)}% dari eksisting`,
+      value: `${conditions.baik || 0} Segmen`,
+      desc: `${(((conditions.baik || 0) / (existingSegs.length || 1)) * 100).toFixed(0)}% dari eksisting`,
       icon: CheckCircle,
       colorClass: 'text-emerald-600 bg-emerald-50 border-emerald-100',
     },
     {
-      title: 'Eksisting Tersumbat / Rusak',
-      value: `${conditions.tersumbat + conditions.rusak_berat + conditions.rusak_ringan} Segmen`,
+      title: 'Eksisting Membutuhkan Perhatian',
+      value: `${needsMaintenanceCount} Segmen`,
       desc: 'Butuh pemeliharaan / rehab',
       icon: ShieldAlert,
       colorClass: 'text-rose-600 bg-rose-50 border-rose-100',

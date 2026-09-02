@@ -81,8 +81,15 @@ class _MapScreenState extends State<MapScreen> {
 
   Color _getConditionColor(String condition) {
     if (condition == 'baik') return const Color(0xFF10B981);
-    if (condition == 'rusak_ringan') return Colors.orange;
-    return Colors.red;
+    if (condition == 'rusak_ringan') return Colors.amber;
+    if (condition == 'rusak_sedang') return Colors.orange;
+    if (condition == 'rusak_berat') return Colors.red;
+    if (condition == 'tersumbat') return Colors.redAccent;
+    if (condition == 'sedimentasi') return Colors.deepOrange;
+    if (condition == 'sedang_perbaikan') return Colors.blue;
+    if (condition == 'saluran_tanah') return Colors.grey;
+    if (condition == 'tutup_rusak') return Colors.purple;
+    return Colors.indigo;
   }
 
   @override

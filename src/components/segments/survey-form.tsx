@@ -79,13 +79,20 @@ export function SurveyForm({ onSuccess, surveyorId, segments = [] }: { onSuccess
       </div>
 
       <Input placeholder="Nama Segmen (contoh: Jl. Gajah Mada Segmen A)" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="h-9 bg-slate-50/20" required />
-      <Textarea placeholder="Deskripsi / catatan tambahan (opsional)" value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} className="resize-none text-xs bg-slate-50/20 min-h-[60px]" rows={2} />
+      <Textarea 
+        placeholder={form.condition === 'lainnya' ? "Ketik rincian kondisi lainnya secara manual di sini... (Wajib diisi)" : "Deskripsi / catatan tambahan (opsional)"} 
+        value={form.description} 
+        onChange={(e) => setForm({...form, description: e.target.value})} 
+        className={`resize-none text-xs min-h-[60px] ${form.condition === 'lainnya' ? 'bg-indigo-50/60 border-indigo-300 focus:border-indigo-500' : 'bg-slate-50/20'}`} 
+        rows={2} 
+        required={form.condition === 'lainnya'}
+      />
       
       <div className="grid grid-cols-3 gap-3">
         {([
           { key: 'category', label: 'Kategori', opt: [{v:'existing',l:'Eksisting'}, {v:'proposed',l:'Rencana'}] },
           { key: 'material', label: 'Material', opt: [{v:'pasangan_batu',l:'Batu Kali'}, {v:'beton_precast',l:'Precast'}, {v:'tanah',l:'Tanah'}, {v:'belum_ada',l:'Belum Ada'}, {v:'lainnya',l:'Lainnya'}] },
-          { key: 'condition', label: 'Kondisi', opt: [{v:'baik',l:'Baik'}, {v:'rusak_ringan',l:'R. Ringan'}, {v:'rusak_berat',l:'R. Berat'}, {v:'tersumbat',l:'Tersumbat'}] }
+          { key: 'condition', label: 'Kondisi', opt: [{v:'baik',l:'Baik'}, {v:'rusak_ringan',l:'R. Ringan'}, {v:'rusak_sedang',l:'R. Sedang'}, {v:'rusak_berat',l:'R. Berat'}, {v:'tersumbat',l:'Tersumbat'}, {v:'sedimentasi',l:'Sedimentasi'}, {v:'sedang_perbaikan',l:'Perbaikan'}, {v:'saluran_tanah',l:'Saluran Tanah'}, {v:'tutup_rusak',l:'Tutup Rusak'}, {v:'lainnya',l:'Lainnya'}] }
         ] as const).map((sel) => (
           <div key={sel.key}>
             <label className="text-[9px] font-bold text-slate-500 uppercase pl-0.5">{sel.label}</label>

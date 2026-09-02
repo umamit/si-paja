@@ -118,7 +118,7 @@ class _SurveyFormScreenState extends State<SurveyFormScreen> {
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(value: _material, items: ['beton_precast', 'pasangan_batu', 'tanah', 'belum_ada', 'lainnya'].map((v) => DropdownMenuItem(value: v, child: Text(v.replaceAll('_', ' ')))).toList(), onChanged: (v) => setState(() => _material = v!)),
             const SizedBox(height: 12),
-            DropdownButtonFormField<String>(value: _condition, items: ['baik', 'rusak_ringan', 'rusak_berat', 'tersumbat'].map((v) => DropdownMenuItem(value: v, child: Text(v.replaceAll('_', ' ')))).toList(), onChanged: (v) => setState(() => _condition = v!)),
+            DropdownButtonFormField<String>(value: _condition, items: ['baik', 'rusak_ringan', 'rusak_sedang', 'rusak_berat', 'tersumbat', 'sedimentasi', 'sedang_perbaikan', 'saluran_tanah', 'tutup_rusak', 'lainnya'].map((v) => DropdownMenuItem(value: v, child: Text(v.replaceAll('_', ' ')))).toList(), onChanged: (v) => setState(() => _condition = v!)),
             const SizedBox(height: 16),
             Row(children: [
               Expanded(child: ElevatedButton.icon(onPressed: () => _getGpsCoordinates(true), icon: const Icon(Icons.location_on), label: Text(_startLat != null ? 'Awal: Ok' : 'GPS Awal'))),
@@ -128,7 +128,7 @@ class _SurveyFormScreenState extends State<SurveyFormScreen> {
             const SizedBox(height: 16),
             ElevatedButton.icon(onPressed: _capturePhoto, icon: const Icon(Icons.camera_alt), label: Text(_localPhotoPath != null ? 'Foto: Tersimpan' : 'Ambil Foto Parit')),
             const SizedBox(height: 12),
-            TextFormField(controller: _descCtrl, maxLines: 2, decoration: const InputDecoration(labelText: 'Keterangan Tambahan')),
+            TextFormField(controller: _descCtrl, maxLines: 2, decoration: InputDecoration(labelText: _condition == 'lainnya' ? 'Detail Kondisi Lainnya (Wajib)' : 'Keterangan Tambahan', border: const OutlineInputBorder())),
             const SizedBox(height: 24),
             ElevatedButton(onPressed: _saveSurvey, style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF10B981), foregroundColor: Colors.black), child: const Text('SIMPAN SURVEI')),
           ],

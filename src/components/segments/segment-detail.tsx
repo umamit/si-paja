@@ -80,8 +80,14 @@ export function SegmentDetail({ segment, isOpen, onClose }: SegmentDetailProps) 
   const conditionColors: Record<string, string> = {
     baik: 'bg-emerald-100 text-emerald-800 border-emerald-250',
     rusak_ringan: 'bg-amber-100 text-amber-800 border-amber-250',
+    rusak_sedang: 'bg-orange-100 text-orange-800 border-orange-250',
     rusak_berat: 'bg-rose-100 text-rose-800 border-rose-250',
-    tersumbat: 'bg-orange-100 text-orange-850 border-orange-250',
+    tersumbat: 'bg-red-100 text-red-900 border-red-250',
+    sedimentasi: 'bg-amber-200 text-amber-900 border-amber-300',
+    sedang_perbaikan: 'bg-blue-100 text-blue-800 border-blue-200',
+    saluran_tanah: 'bg-slate-100 text-slate-800 border-slate-200',
+    tutup_rusak: 'bg-purple-100 text-purple-800 border-purple-200',
+    lainnya: 'bg-indigo-100 text-indigo-800 border-indigo-200',
   };
 
   return (

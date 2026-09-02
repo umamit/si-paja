@@ -9,7 +9,17 @@ export interface Profile {
 
 export type MaterialType = 'pasangan_batu' | 'beton_precast' | 'tanah' | 'belum_ada' | 'lainnya';
 
-export type PhysicalCondition = 'baik' | 'rusak_ringan' | 'rusak_berat' | 'tersumbat';
+export type PhysicalCondition = 
+  | 'baik' 
+  | 'rusak_ringan' 
+  | 'rusak_sedang' 
+  | 'rusak_berat' 
+  | 'tersumbat' 
+  | 'sedimentasi' 
+  | 'sedang_perbaikan' 
+  | 'saluran_tanah' 
+  | 'tutup_rusak' 
+  | 'lainnya';
 
 export type GpsSourceType = 'device_gps' | 'file_import' | 'manual_input';
 

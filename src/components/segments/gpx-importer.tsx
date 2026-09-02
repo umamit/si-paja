@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { FileUp, FileCheck, AlertCircle, Loader2 } from 'lucide-react';
-import { DrainageSegment } from '@/types';
+import { DrainageSegment, PhysicalCondition } from '@/types';
 
 interface GpxImporterProps { onSuccess: (input: CreateSegmentInput, updateId?: string) => void; surveyorId?: string; segments?: DrainageSegment[]; }
 
@@ -18,7 +18,7 @@ export function GpxImporter({ onSuccess, surveyorId, segments = [] }: GpxImporte
   const [parsedData, setParsedData] = useState<any | null>(null);
   const [category, setCategory] = useState<'existing' | 'proposed'>('existing');
   const [material, setMaterial] = useState<'pasangan_batu' | 'beton_precast' | 'tanah' | 'belum_ada' | 'lainnya'>('pasangan_batu');
-  const [condition, setCondition] = useState<'baik' | 'rusak_ringan' | 'rusak_berat' | 'tersumbat'>('baik');
+  const [condition, setCondition] = useState<PhysicalCondition>('baik');
   const [widthCm, setWidthCm] = useState('50');
   const [depthCm, setDepthCm] = useState('50');
 
@@ -91,7 +91,7 @@ export function GpxImporter({ onSuccess, surveyorId, segments = [] }: GpxImporte
             {([
               { key: 'category', label: 'Kategori', val: category, set: setCategory, opt: [{v:'existing',l:'Eksisting'}, {v:'proposed',l:'Rencana'}] },
               { key: 'material', label: 'Material', val: material, set: setMaterial, opt: [{v:'pasangan_batu',l:'Batu Kali'}, {v:'beton_precast',l:'Precast'}, {v:'tanah',l:'Tanah'}, {v:'belum_ada',l:'Belum Ada'}, {v:'lainnya',l:'Lainnya'}] },
-              { key: 'condition', label: 'Kondisi', val: condition, set: setCondition, opt: [{v:'baik',l:'Baik'}, {v:'rusak_ringan',l:'R. Ringan'}, {v:'rusak_berat',l:'R. Berat'}, {v:'tersumbat',l:'Tersumbat'}] }
+              { key: 'condition', label: 'Kondisi', val: condition, set: setCondition, opt: [{v:'baik',l:'Baik'}, {v:'rusak_ringan',l:'R. Ringan'}, {v:'rusak_sedang',l:'R. Sedang'}, {v:'rusak_berat',l:'R. Berat'}, {v:'tersumbat',l:'Tersumbat'}, {v:'sedimentasi',l:'Sedimentasi'}, {v:'sedang_perbaikan',l:'Perbaikan'}, {v:'saluran_tanah',l:'Saluran Tanah'}, {v:'tutup_rusak',l:'Tutup Rusak'}, {v:'lainnya',l:'Lainnya'}] }
             ] as const).map((sel) => (
               <div key={sel.key}>
                 <label className="text-[9px] font-bold text-slate-500 uppercase pl-0.5">{sel.label}</label>

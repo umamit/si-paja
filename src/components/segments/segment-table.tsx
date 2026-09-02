@@ -29,8 +29,14 @@ export function SegmentTable({ segments, onViewDetails, onDelete, isAdmin }: Seg
   const conditionColors: Record<string, string> = {
     baik: 'bg-emerald-100 text-emerald-800 border-emerald-200',
     rusak_ringan: 'bg-amber-100 text-amber-850 border-amber-200',
+    rusak_sedang: 'bg-orange-100 text-orange-800 border-orange-200',
     rusak_berat: 'bg-rose-100 text-rose-800 border-rose-200',
-    tersumbat: 'bg-orange-100 text-orange-800 border-orange-200',
+    tersumbat: 'bg-red-100 text-red-900 border-red-250',
+    sedimentasi: 'bg-amber-200 text-amber-900 border-amber-300',
+    sedang_perbaikan: 'bg-blue-100 text-blue-800 border-blue-200',
+    saluran_tanah: 'bg-slate-100 text-slate-800 border-slate-200',
+    tutup_rusak: 'bg-purple-100 text-purple-800 border-purple-200',
+    lainnya: 'bg-indigo-100 text-indigo-800 border-indigo-200',
   };
 
   return (
@@ -51,8 +57,14 @@ export function SegmentTable({ segments, onViewDetails, onDelete, isAdmin }: Seg
               <SelectItem value="all">Semua Kondisi</SelectItem>
               <SelectItem value="baik">Baik</SelectItem>
               <SelectItem value="rusak_ringan">Rusak Ringan</SelectItem>
+              <SelectItem value="rusak_sedang">Rusak Sedang</SelectItem>
               <SelectItem value="rusak_berat">Rusak Berat</SelectItem>
               <SelectItem value="tersumbat">Tersumbat</SelectItem>
+              <SelectItem value="sedimentasi">Sedimentasi</SelectItem>
+              <SelectItem value="sedang_perbaikan">Sedang Perbaikan</SelectItem>
+              <SelectItem value="saluran_tanah">Saluran Tanah</SelectItem>
+              <SelectItem value="tutup_rusak">Tutup Rusak</SelectItem>
+              <SelectItem value="lainnya">Lainnya</SelectItem>
             </SelectContent>
           </Select>
         </div>
