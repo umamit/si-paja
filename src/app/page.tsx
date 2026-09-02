@@ -63,9 +63,6 @@ export default function LoginPage() {
 
       {/* Glassmorphism Container */}
       <div className="w-full max-w-md bg-[#12171d]/85 backdrop-blur-2xl border border-slate-800/90 rounded-2xl shadow-2xl relative z-10 overflow-hidden transition-all duration-300 hover:border-emerald-500/40">
-        {/* Subtle Accent Header Line */}
-        <div className="h-1 w-full bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600" />
-        
         <div className="p-8 space-y-6">
           <div className="flex items-center justify-center gap-2 border-b border-slate-800/80 pb-4">
             <LogIn className="h-4 w-4 text-emerald-400" />
