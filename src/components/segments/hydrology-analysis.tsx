@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Waves, ArrowDownRight, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { HydrologySketch } from './hydrology-sketch';
+import { Segment3DView } from './segment-3d-view';
 
 interface HydrologyAnalysisProps { segment: DrainageSegment; }
 
@@ -12,6 +13,7 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
   const [rainIntensity, setRainIntensity] = useState(110);
   const [catchmentWidth, setCatchmentWidth] = useState(15);
   const [viewTab, setViewTab] = useState<'aktual' | 'rencana'>('aktual');
+  const [viewDim, setViewDim] = useState<'2d' | '3d'>('3d');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -35,7 +37,9 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
   const Q_aktual = V_aktual * A_c;
   
   const isSafe = Q_aktual >= Q_rencana;
-  const h = Math.min(Q_rencana / (Math.max(V_aktual, 0.1) * B), H);
+  const h_required = Q_rencana / (Math.max(V_aktual, 0.1) * B);
+  const h = Math.min(h_required, H);
+  const overflow = Math.max(h_required - H, 0);
   const freeboard = Math.max(H - h, 0);
   const isSiltRisk = V_aktual < 0.6 && segment.length_m > 0;
 
@@ -90,13 +94,13 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
             </div>
           ) : (
             <div className="flex items-start gap-1.5 p-2 bg-rose-50 text-rose-800 rounded border border-rose-100">
-              <AlertTriangle className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" /><p>Rawan. Luapan setinggi <strong>{Math.abs(H-h).toFixed(2)}m</strong> di atas bibir parit!</p>
+              <AlertTriangle className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" /><p>Rawan. Luapan setinggi <strong>{overflow.toFixed(2)}m</strong> di atas bibir parit!</p>
             </div>
           )}
           {isSiltRisk && (
             <div className="flex items-start gap-1.5 p-2 bg-amber-50 text-amber-900 rounded border border-amber-200">
               <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-              <p>⚠️ <strong>Rawan Sedimentasi:</strong> Kecepatan aliran air basah ({V_aktual.toFixed(2)} m/s) di bawah batas aman swa-pembersih (0.60 m/s), lumpur mudah mengendap.</p>
+              <p><strong>Rawan Sedimentasi:</strong> Kecepatan aliran air basah ({V_aktual.toFixed(2)} m/s) di bawah batas aman swa-pembersih (0.60 m/s), lumpur mudah mengendap.</p>
             </div>
           )}
         </div>
@@ -109,19 +113,34 @@ export function HydrologyAnalysis({ segment }: HydrologyAnalysisProps) {
           </div>
         )}
 
-        {/* Render Sketch secara Dinamis */}
-        {viewTab === 'rencana' && !isSafe ? (
-          <>
-            <HydrologySketch width_cm={B_rec_cm} depth_cm={H_rec_cm} water_height_m={h_rec} freeboard_m={f_rec} label="Rencana Penampang Aman (Best Hydraulic Section)" />
-            <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-2.5 text-[10.5px] text-emerald-800 leading-relaxed space-y-1">
-              <p className="font-bold border-b border-emerald-250 pb-1">💡 ANALISIS DESAIN PERBAIKAN:</p>
-              <p>1. Dimensi parit diperlebar menjadi <strong>{B_rec_cm} cm</strong> dan diperdalam menjadi <strong>{H_rec_cm} cm</strong>.</p>
-              <p>2. Rasio desain optimal menggunakan rumus hidrolis terbaik parit persegi ($B = 2h$).</p>
-              <p>3. Kapasitas baru mampu mengalirkan debit air hujan rencana dengan tinggi jagaan aman <strong>{f_rec.toFixed(2)} m</strong>.</p>
-            </div>
-          </>
+        <div className="flex items-center justify-between mt-2 pt-1 border-t border-slate-100">
+          <span className="text-[10px] uppercase font-bold text-slate-400">Model Penampang</span>
+          <div className="flex bg-slate-200/60 p-0.5 rounded text-[10px] font-bold">
+            <button onClick={() => setViewDim('3d')} className={`px-2 py-0.5 rounded transition-all ${viewDim === '3d' ? 'bg-white shadow-xs text-blue-700' : 'text-slate-500'}`}>3D Realistis</button>
+            <button onClick={() => setViewDim('2d')} className={`px-2 py-0.5 rounded transition-all ${viewDim === '2d' ? 'bg-white shadow-xs text-slate-800' : 'text-slate-500'}`}>2D Sketsa</button>
+          </div>
+        </div>
+
+        {viewDim === '3d' ? (
+          <Segment3DView 
+            segment={segment} 
+            customWidthCm={viewTab === 'rencana' && !isSafe ? B_rec_cm : undefined} 
+            customDepthCm={viewTab === 'rencana' && !isSafe ? H_rec_cm : undefined} 
+          />
         ) : (
-          <HydrologySketch width_cm={segment.width_cm} depth_cm={segment.depth_cm} water_height_m={h} freeboard_m={freeboard} label="Dimensi Penampang Parit Aktual" />
+          viewTab === 'rencana' && !isSafe ? (
+            <HydrologySketch width_cm={B_rec_cm} depth_cm={H_rec_cm} water_height_m={h_rec} freeboard_m={f_rec} label="Rencana Penampang Aman (Best Hydraulic Section)" />
+          ) : (
+            <HydrologySketch width_cm={segment.width_cm} depth_cm={segment.depth_cm} water_height_m={h_required} freeboard_m={freeboard} label="Dimensi Penampang Parit Aktual" />
+          )
+        )}
+
+        {viewTab === 'rencana' && !isSafe && (
+          <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-2.5 text-[10.5px] text-emerald-800 leading-relaxed space-y-1">
+            <p className="font-bold border-b border-emerald-250 pb-1">ANALISIS DESAIN PERBAIKAN:</p>
+            <p>1. Dimensi diperlebar jadi <strong>{B_rec_cm} cm</strong> & diperdalam jadi <strong>{H_rec_cm} cm</strong>.</p>
+            <p>2. Kapasitas baru aman dengan tinggi jagaan <strong>{f_rec.toFixed(2)} m</strong>.</p>
+          </div>
         )}
       </CardContent>
     </Card>

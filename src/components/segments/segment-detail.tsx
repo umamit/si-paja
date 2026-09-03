@@ -128,9 +128,7 @@ export function SegmentDetail({ segment, isOpen, onClose }: SegmentDetailProps) 
             </div>
           </div>
           <div className="flex items-center gap-2"><Calendar className="h-4 w-4 text-emerald-600" />
-            <p className="text-[10px] text-slate-500">
-              Disurvei: {new Date(segment.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </p>
+            <p className="text-[10px] text-slate-500">Disurvei: {new Date(segment.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
           </div>
         </div>
 
